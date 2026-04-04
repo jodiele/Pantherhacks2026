@@ -1,6 +1,7 @@
 import { BurnAlertCard } from '../components/BurnAlertCard'
 import { useSunCheck } from '../context/SunCheckContext'
 import { formatLabel, topScores } from '../lib/format'
+import { moistureHintLabel, sunburnDegreeLabel } from '../lib/scanLabels'
 import {
   SUNBURN_CARE,
   WHEN_TO_SEEK_CARE,
@@ -37,11 +38,12 @@ export function ScanPage() {
     <div className="page">
       <section className="section section--page" aria-labelledby="scan-heading">
         <h2 id="scan-heading" className="section-title">
-          Photo scan (demo model)
+          Photo scan (demo)
         </h2>
         <p className="section-lead">
-          The backend runs a research classifier on your image, plus a simple color-based
-          “warmth” signal—informal only, not a burn detector.
+          We show a simple <strong>oily vs dry</strong> readout from the model’s scores for
+          those two classes, and a <strong>sun-stress band</strong> from image color (not a
+          real burn diagnosis). For judges: this is a hackathon demo only.
         </p>
 
         <div className="mode-tabs">
@@ -135,31 +137,49 @@ export function ScanPage() {
         {result && (
           <div className="result-stack">
             {warmthBurnAlert && <BurnAlertCard alert={warmthBurnAlert} />}
-            {warmthSignal !== null && (
-              <div className="result-card warmth-card">
-                <h2>Warmth signal (demo)</h2>
-                <p className="warmth-bar-wrap">
-                  <span
-                    className="warmth-bar"
-                    style={{ width: `${Math.round(warmthSignal * 100)}%` }}
-                  />
-                </p>
-                <p className="warmth-caption">
-                  Informal red-channel hint: {Math.round(warmthSignal * 100)}% — not a
-                  clinical measure of sunburn.
-                </p>
-              </div>
-            )}
 
-            <div className="result-card">
-              <h2>Model pattern match</h2>
-              <p className="prediction-main">{formatLabel(result.label)}</p>
-              <p className="confidence">
-                Confidence {Math.round(result.confidence * 1000) / 10}%
+            <div className="result-card summary-card">
+              <h2>Moisture hint (oily / dry)</h2>
+              <p className="prediction-main">
+                {moistureHintLabel(result.moisture_hint)}
               </p>
               <p className="model-note">
-                Trained labels are not specific to sunburn. Use this only as a hackathon demo
-                alongside UV and real medical guidance.
+                From the model’s <strong>oily</strong> vs <strong>dry</strong> probabilities
+                only. If both are weak, we say “unclear.” Not a clinical skin-type test.
+              </p>
+            </div>
+
+            <div className="result-card summary-card">
+              <h2>Sun-stress band (demo)</h2>
+              <p className="prediction-main">
+                {sunburnDegreeLabel(result.sunburn_degree)}
+              </p>
+              {warmthSignal !== null && (
+                <>
+                  <p className="warmth-bar-wrap">
+                    <span
+                      className="warmth-bar"
+                      style={{ width: `${Math.round(warmthSignal * 100)}%` }}
+                    />
+                  </p>
+                  <p className="warmth-caption">
+                    Color “warmth” index: {Math.round(warmthSignal * 100)}% — does{' '}
+                    <strong>not</strong> mean you are or aren’t sunburned.
+                  </p>
+                </>
+              )}
+            </div>
+
+            <div className="result-card">
+              <h2>Original model top label (technical)</h2>
+              <p className="prediction-main">{formatLabel(result.label)}</p>
+              <p className="confidence">
+                Argmax confidence {Math.round(result.confidence * 1000) / 10}%
+              </p>
+              <p className="model-note">
+                The network was trained on nine skin labels; the argmax is often wrong on
+                random photos. Prefer the oily/dry and sun-stress summaries above for your
+                demo story.
               </p>
               <ul className="score-list">
                 {scores.map(([name, val]) => (
