@@ -44,12 +44,17 @@ export function HomePage() {
     setPlanLoading(true)
     setPlanError(null)
     try {
-      const [uvPlan, wx] = await Promise.all([
+      const [uvResult, wxResult] = await Promise.allSettled([
         fetchTodayUvPlan(lat, lon),
         fetchRestOfDayWeather(lat, lon),
       ])
-      setPlan(uvPlan)
-      setWeatherRows(wx)
+      if (uvResult.status === 'rejected') {
+        throw uvResult.reason
+      }
+      setPlan(uvResult.value)
+      setWeatherRows(
+        wxResult.status === 'fulfilled' ? wxResult.value : null,
+      )
     } catch (e) {
       setPlan(null)
       setWeatherRows(null)
