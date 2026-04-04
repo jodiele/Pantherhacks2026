@@ -1,5 +1,5 @@
 /**
- * WeatherAPI.com — forecast for “rest of today” on the home planner.
+ * WeatherAPI.com — today’s snapshot + 7-day outlook for the home planner.
  *
  * Setup:
  * 1. Copy `frontend/.env.example` → `.env.local` (or create `.env.local`).
@@ -9,10 +9,23 @@
  * Free tier: https://www.weatherapi.com/
  */
 
-export type WeatherHourSummary = {
-  timeLabel: string
-  summary: string
-  tempC?: number
+export type WeatherWeekDayRow = {
+  date: string
+  /** “Today” or short weekday */
+  label: string
+  highTempC: number
+  lowTempC: number
+  conditionText: string
+}
+
+export type WeatherHomeOverview = {
+  currentTempC: number
+  highTempC: number
+  lowTempC: number
+  /** Short phrase, e.g. “Mostly sunny” */
+  conditionText: string
+  /** Usually 7 entries (today + next 6), or fewer if the plan limits days */
+  week: WeatherWeekDayRow[]
 }
 
 export function isWeatherApiConfigured(): boolean {
@@ -20,34 +33,44 @@ export function isWeatherApiConfigured(): boolean {
   return typeof k === 'string' && k.trim().length > 0
 }
 
-type WeatherApiHour = {
-  time?: string
-  temp_c?: number
-  condition?: { text?: string }
-}
-
 type WeatherApiForecastJson = {
+  current?: {
+    temp_c?: number
+    condition?: { text?: string }
+  }
   forecast?: {
     forecastday?: Array<{
-      hour?: WeatherApiHour[]
+      date?: string
+      day?: {
+        maxtemp_c?: number
+        mintemp_c?: number
+        condition?: { text?: string }
+      }
     }>
   }
   error?: { message?: string }
 }
 
-function parseHourTime(raw: string): Date {
-  const normalized = raw.includes('T') ? raw : raw.replace(' ', 'T')
-  const d = new Date(normalized)
-  return Number.isNaN(d.getTime()) ? new Date(0) : d
+function toSentenceCase(s: string): string {
+  const t = s.trim().toLowerCase()
+  if (!t) return ''
+  return t.charAt(0).toUpperCase() + t.slice(1)
+}
+
+function weekdayShortLabel(dateStr: string, isToday: boolean): string {
+  if (isToday) return 'Today'
+  const d = new Date(`${dateStr}T12:00:00`)
+  if (Number.isNaN(d.getTime())) return dateStr
+  return d.toLocaleDateString(undefined, { weekday: 'short' })
 }
 
 /**
- * Hourly rows from now through late tonight (same day in API response).
+ * Current conditions, today’s high/low, and up to 7 days of highs/lows + conditions.
  */
-export async function fetchRestOfDayWeather(
+export async function fetchTodayWeatherOverview(
   lat: number,
   lon: number,
-): Promise<WeatherHourSummary[] | null> {
+): Promise<WeatherHomeOverview | null> {
   if (!isWeatherApiConfigured()) {
     return null
   }
@@ -56,7 +79,7 @@ export async function fetchRestOfDayWeather(
   const url = new URL('https://api.weatherapi.com/v1/forecast.json')
   url.searchParams.set('key', key)
   url.searchParams.set('q', `${lat},${lon}`)
-  url.searchParams.set('days', '1')
+  url.searchParams.set('days', '7')
   url.searchParams.set('aqi', 'no')
   url.searchParams.set('alerts', 'no')
 
@@ -68,31 +91,47 @@ export async function fetchRestOfDayWeather(
     throw new Error(msg)
   }
 
-  const hours = data.forecast?.forecastday?.[0]?.hour ?? []
-  if (!hours.length) {
-    return []
+  const currentTemp = data.current?.temp_c
+  const forecastDays = data.forecast?.forecastday ?? []
+  const todayBlock = forecastDays[0]?.day
+  const high = todayBlock?.maxtemp_c
+  const low = todayBlock?.mintemp_c
+
+  if (
+    typeof currentTemp !== 'number' ||
+    typeof high !== 'number' ||
+    typeof low !== 'number'
+  ) {
+    return null
   }
 
-  const now = Date.now()
-  const windowStart = now - 30 * 60 * 1000
+  const rawCondition =
+    data.current?.condition?.text?.trim() ||
+    todayBlock?.condition?.text?.trim() ||
+    ''
 
-  const rows: WeatherHourSummary[] = hours
-    .map((h) => {
-      const t = h.time ? parseHourTime(h.time) : null
-      if (!t || t.getTime() === 0) return null
-      return {
-        at: t.getTime(),
-        timeLabel: t.toLocaleTimeString(undefined, {
-          hour: 'numeric',
-          minute: '2-digit',
-        }),
-        summary: h.condition?.text?.trim() || '—',
-        tempC: typeof h.temp_c === 'number' ? h.temp_c : undefined,
-      }
+  const week: WeatherWeekDayRow[] = []
+  for (let i = 0; i < forecastDays.length; i++) {
+    const fd = forecastDays[i]
+    const date = fd.date?.trim() ?? `day-${i}`
+    const d = fd.day
+    const hi = d?.maxtemp_c
+    const lo = d?.mintemp_c
+    if (typeof hi !== 'number' || typeof lo !== 'number') continue
+    week.push({
+      date,
+      label: weekdayShortLabel(date, i === 0),
+      highTempC: hi,
+      lowTempC: lo,
+      conditionText: toSentenceCase(d?.condition?.text ?? '') || '—',
     })
-    .filter((row): row is NonNullable<typeof row> => row !== null && row.at >= windowStart)
-    .sort((a, b) => a.at - b.at)
-    .map(({ timeLabel, summary, tempC }) => ({ timeLabel, summary, tempC }))
+  }
 
-  return rows.slice(0, 14)
+  return {
+    currentTempC: currentTemp,
+    highTempC: high,
+    lowTempC: low,
+    conditionText: toSentenceCase(rawCondition) || '—',
+    week,
+  }
 }

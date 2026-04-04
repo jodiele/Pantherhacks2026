@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { fetchRestOfDayWeather, isWeatherApiConfigured } from '../api/weather'
+import { fetchTodayWeatherOverview, isWeatherApiConfigured } from '../api/weather'
 import { useSunCheck } from '../context/SunCheckContext'
 import { fetchTodayUvPlan, type TodayUvPlan, uvGuidance } from '../sunburn'
 
@@ -35,8 +35,8 @@ export function HomePage() {
   const [planLoading, setPlanLoading] = useState(false)
   const [planError, setPlanError] = useState<string | null>(null)
   const [plan, setPlan] = useState<TodayUvPlan | null>(null)
-  const [weatherRows, setWeatherRows] = useState<Awaited<
-    ReturnType<typeof fetchRestOfDayWeather>
+  const [weatherOverview, setWeatherOverview] = useState<Awaited<
+    ReturnType<typeof fetchTodayWeatherOverview>
   >>(null)
   const [pickedIdeas, setPickedIdeas] = useState<Set<string>>(() => new Set())
 
@@ -46,18 +46,18 @@ export function HomePage() {
     try {
       const [uvResult, wxResult] = await Promise.allSettled([
         fetchTodayUvPlan(lat, lon),
-        fetchRestOfDayWeather(lat, lon),
+        fetchTodayWeatherOverview(lat, lon),
       ])
       if (uvResult.status === 'rejected') {
         throw uvResult.reason
       }
       setPlan(uvResult.value)
-      setWeatherRows(
+      setWeatherOverview(
         wxResult.status === 'fulfilled' ? wxResult.value : null,
       )
     } catch (e) {
       setPlan(null)
-      setWeatherRows(null)
+      setWeatherOverview(null)
       setPlanError(e instanceof Error ? e.message : 'Could not load today’s UV plan.')
     } finally {
       setPlanLoading(false)
@@ -189,24 +189,57 @@ export function HomePage() {
           )}
 
           <div className="home-weather-card">
-            <p className="home-weather-title">Weather for the rest of the day</p>
-            {isWeatherApiConfigured() && weatherRows && weatherRows.length > 0 ? (
-              <ul className="home-weather-list">
-                {weatherRows.slice(0, 8).map((w, i) => (
-                  <li key={i}>
-                    <span className="home-weather-time">{w.timeLabel}</span>
-                    <span className="home-weather-sum">{w.summary}</span>
-                    {w.tempC != null && (
-                      <span className="home-weather-temp">{Math.round(w.tempC)}°C</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
+            <p className="home-weather-title">Weather</p>
+            {isWeatherApiConfigured() && weatherOverview ? (
+              <div className="home-weather-split">
+                <div className="home-weather-col home-weather-col--today">
+                  <p className="home-weather-col-title">Now</p>
+                  <div className="home-weather-overview">
+                    <div className="home-weather-current" aria-label="Current temperature">
+                      <span className="home-weather-current-val">
+                        {Math.round(weatherOverview.currentTempC)}
+                      </span>
+                      <span className="home-weather-current-unit">°C</span>
+                    </div>
+                    <p className="home-weather-hilo" aria-label="Today high and low">
+                      <span className="home-weather-hilo-item">
+                        <span className="home-weather-hilo-label">H</span>
+                        {Math.round(weatherOverview.highTempC)}°
+                      </span>
+                      <span className="home-weather-hilo-sep" aria-hidden>
+                        ·
+                      </span>
+                      <span className="home-weather-hilo-item">
+                        <span className="home-weather-hilo-label">L</span>
+                        {Math.round(weatherOverview.lowTempC)}°
+                      </span>
+                    </p>
+                    <p className="home-weather-condition">{weatherOverview.conditionText}</p>
+                  </div>
+                </div>
+                <div className="home-weather-col home-weather-col--week">
+                  <p className="home-weather-col-title">Next 7 days</p>
+                  <ul className="home-weather-week" aria-label="Daily high and low for the week">
+                    {weatherOverview.week.map((d) => (
+                      <li key={d.date} className="home-weather-week-row">
+                        <span className="home-weather-week-day">{d.label}</span>
+                        <span className="home-weather-week-temps" aria-label={`High ${Math.round(d.highTempC)}, low ${Math.round(d.lowTempC)}`}>
+                          <span className="home-weather-week-hi">{Math.round(d.highTempC)}°</span>
+                          <span className="home-weather-week-lo">{Math.round(d.lowTempC)}°</span>
+                        </span>
+                        <span className="home-weather-week-sum" title={d.conditionText}>
+                          {d.conditionText}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             ) : (
               <p className="status home-weather-placeholder">
                 {isWeatherApiConfigured()
-                  ? 'Weather API key is set — connect fetchRestOfDayWeather() in src/api/weather.ts to your provider.'
-                  : 'Your teammate can plug in hourly weather: add VITE_WEATHER_API_KEY to .env.local and implement src/api/weather.ts.'}
+                  ? 'Couldn’t load weather for this location. Check your API key or try again.'
+                  : 'Add your WeatherAPI.com key as VITE_WEATHER_API_KEY in .env.local (see src/api/weather.ts).'}
               </p>
             )}
           </div>
