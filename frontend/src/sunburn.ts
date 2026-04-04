@@ -1,5 +1,75 @@
 /** Open-Meteo: free, no API key. https://open-meteo.com */
 
+export type UvHourlyPoint = {
+  /** Local wall time from API (timezone=auto) */
+  at: Date
+  /** Short label e.g. "2:00 PM" */
+  label: string
+  uv: number
+}
+
+export type TodayUvPlan = {
+  /** Full 24h slice returned for “today” */
+  hourly: UvHourlyPoint[]
+  /** Hour with maximum UV (for planning shade / SPF) */
+  peak: UvHourlyPoint | null
+  /** From now through end of forecast day */
+  restOfDay: UvHourlyPoint[]
+}
+
+/**
+ * Hourly UV for today — use peak time to plan outdoor blocks.
+ * No API key (Open-Meteo).
+ */
+export async function fetchTodayUvPlan(
+  latitude: number,
+  longitude: number,
+): Promise<TodayUvPlan> {
+  const url = new URL('https://api.open-meteo.com/v1/forecast')
+  url.searchParams.set('latitude', String(latitude))
+  url.searchParams.set('longitude', String(longitude))
+  url.searchParams.set('hourly', 'uv_index')
+  url.searchParams.set('forecast_days', '1')
+  url.searchParams.set('timezone', 'auto')
+
+  const res = await fetch(url.toString())
+  if (!res.ok) {
+    throw new Error('Hourly UV could not be loaded.')
+  }
+  const data = (await res.json()) as {
+    hourly?: { time?: string[]; uv_index?: (number | null)[] }
+  }
+  const times = data?.hourly?.time ?? []
+  const values = data?.hourly?.uv_index ?? []
+  if (!times.length || times.length !== values.length) {
+    throw new Error('No hourly UV data for this location.')
+  }
+
+  const hourly: UvHourlyPoint[] = times.map((t, i) => {
+    const at = new Date(t)
+    const uv = values[i]
+    const n = typeof uv === 'number' && !Number.isNaN(uv) ? uv : 0
+    return {
+      at,
+      label: at.toLocaleTimeString(undefined, {
+        hour: 'numeric',
+        minute: '2-digit',
+      }),
+      uv: n,
+    }
+  })
+
+  let peak: UvHourlyPoint | null = null
+  for (const p of hourly) {
+    if (!peak || p.uv > peak.uv) peak = p
+  }
+
+  const now = Date.now()
+  const restOfDay = hourly.filter((p) => p.at.getTime() >= now - 30 * 60 * 1000)
+
+  return { hourly, peak, restOfDay }
+}
+
 export async function fetchCurrentUv(latitude: number, longitude: number): Promise<number> {
   const url = new URL('https://api.open-meteo.com/v1/forecast')
   url.searchParams.set('latitude', String(latitude))
