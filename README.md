@@ -35,7 +35,6 @@ Open the URL Vite prints (e.g. `http://localhost:5173`). The dev server proxies 
 ## Credits
 
 - Hackathon project for **PantherHacks 2026**.
-- Model and original Flask/skin-classification work inspired by [MahimaKhatri/Skin-Disease-Detection](https://github.com/MahimaKhatri/Skin-Disease-Detection).
 
 ## License
 

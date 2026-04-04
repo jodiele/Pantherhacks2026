@@ -30,6 +30,162 @@
   width: 100%;
 }
 
+.shell--with-nav {
+  padding-top: 1.5rem;
+}
+
+.brand--compact h1 {
+  margin-bottom: 0.25rem;
+}
+
+.brand--compact {
+  margin-bottom: 1rem;
+}
+
+.main-nav {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+}
+
+.nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.nav-tab {
+  font-family: var(--font);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.nav-tab:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-tab--active {
+  background: var(--accent-dim);
+  border-color: rgba(94, 234, 212, 0.35);
+  color: var(--accent);
+}
+
+.page-main {
+  min-height: 40vh;
+}
+
+.page {
+  animation: page-in 0.2s ease;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section--page {
+  margin-bottom: 2rem;
+}
+
+.section--page:last-child {
+  margin-bottom: 0;
+}
+
+.home-lead {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  max-width: 52ch;
+  margin: 0 0 1.5rem;
+}
+
+.home-cards {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.home-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1.15rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+
+.home-card:hover {
+  border-color: rgba(94, 234, 212, 0.35);
+  background: var(--surface);
+}
+
+.home-card-title {
+  font-weight: 600;
+  color: var(--heading);
+  font-size: 1rem;
+}
+
+.home-card-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.home-hint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.filler-panel p {
+  margin: 0 0 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.filler-panel p:last-child {
+  margin-bottom: 0;
+}
+
+.filler-cta {
+  margin-top: 1rem !important;
+}
+
+.filler-cta a {
+  font-weight: 500;
+}
+
+.filler-note {
+  border-style: dashed;
+  opacity: 0.95;
+}
+
 header.brand {
   margin-bottom: 2rem;
 }
