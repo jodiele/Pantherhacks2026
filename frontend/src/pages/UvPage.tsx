@@ -6,14 +6,15 @@ export function UvPage() {
   const {
     uvIndex,
     uvCoords,
+    uvPlaceLabel,
     uvLoading,
     uvError,
-    manualLat,
-    setManualLat,
-    manualLon,
-    setManualLon,
+    manualCity,
+    setManualCity,
+    manualState,
+    setManualState,
     refreshUvFromLocation,
-    applyManualCoords,
+    applyCityStatePlace,
   } = useSunCheck()
 
   const uvTips = uvIndex !== null ? uvGuidance(uvIndex) : null
@@ -30,6 +31,14 @@ export function UvPage() {
           <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">
             Open-Meteo
           </a>
+          . Places are looked up with{' '}
+          <a
+            href="https://open-meteo.com/en/docs/geocoding-api"
+            target="_blank"
+            rel="noreferrer"
+          >
+            their geocoder
+          </a>
           . Refresh when you change location.
         </p>
 
@@ -45,35 +54,41 @@ export function UvPage() {
             </button>
           </div>
 
-          <div className="manual-coords">
-            <span className="manual-label">Or enter coordinates</span>
-            <div className="manual-row">
-              <label className="sr-only" htmlFor="lat">
-                Latitude
+          <div className="manual-coords manual-place">
+            <span className="manual-label">Or enter city &amp; state</span>
+            <p className="manual-place-hint">
+              State helps pick the right city (e.g. Portland <strong>OR</strong> vs{' '}
+              <strong>ME</strong>). Use two-letter code or full name.
+            </p>
+            <div className="manual-row manual-row--place">
+              <label className="sr-only" htmlFor="uv-city">
+                City
               </label>
               <input
-                id="lat"
-                className="coord-input"
-                inputMode="decimal"
-                placeholder="Latitude (e.g. 37.77)"
-                value={manualLat}
-                onChange={(e) => setManualLat(e.target.value)}
+                id="uv-city"
+                className="coord-input place-input place-input--city"
+                type="text"
+                autoComplete="address-level2"
+                placeholder="City (e.g. Austin)"
+                value={manualCity}
+                onChange={(e) => setManualCity(e.target.value)}
               />
-              <label className="sr-only" htmlFor="lon">
-                Longitude
+              <label className="sr-only" htmlFor="uv-state">
+                State
               </label>
               <input
-                id="lon"
-                className="coord-input"
-                inputMode="decimal"
-                placeholder="Longitude (e.g. -122.42)"
-                value={manualLon}
-                onChange={(e) => setManualLon(e.target.value)}
+                id="uv-state"
+                className="coord-input place-input place-input--state"
+                type="text"
+                autoComplete="address-level1"
+                placeholder="State (e.g. TX)"
+                value={manualState}
+                onChange={(e) => setManualState(e.target.value)}
               />
               <button
                 type="button"
                 className="btn btn-ghost"
-                onClick={() => applyManualCoords()}
+                onClick={() => void applyCityStatePlace()}
                 disabled={uvLoading}
               >
                 Get UV
@@ -93,11 +108,22 @@ export function UvPage() {
               </div>
               <div className="uv-meta">
                 <p className="uv-band">{uvTips.band} exposure</p>
-                {uvCoords && (
+                {uvCoords ? (
                   <p className="uv-loc">
-                    {uvCoords.lat.toFixed(2)}°, {uvCoords.lon.toFixed(2)}°
+                    {uvPlaceLabel ? (
+                      <>
+                        {uvPlaceLabel}{' '}
+                        <span className="uv-loc-coords">
+                          ({uvCoords.lat.toFixed(2)}°, {uvCoords.lon.toFixed(2)}°)
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        {uvCoords.lat.toFixed(2)}°, {uvCoords.lon.toFixed(2)}°
+                      </>
+                    )}
                   </p>
-                )}
+                ) : null}
                 <p className="uv-summary">{uvTips.summary}</p>
                 <ul className="tip-list">
                   {uvTips.tips.map((t) => (
@@ -115,8 +141,8 @@ export function UvPage() {
           Burn alerts
         </h2>
         <p className="section-lead">
-          Alerts react to the <strong>current UV index</strong> for your coordinates. Photo
-          warmth alerts appear on the <strong>Photo scan</strong> tab after you run a scan.
+          Alerts react to the <strong>current UV index</strong> for your location. Photo warmth
+          alerts appear on the <strong>Photo scan</strong> tab after you run a scan.
         </p>
         <div className="burn-alert-stack">
           {uvIndex === null ? (
@@ -124,7 +150,7 @@ export function UvPage() {
               alert={{
                 level: 'info',
                 headline: 'Load UV to unlock live burn alerts',
-                body: 'Use “Use my location” or enter latitude and longitude above.',
+                body: 'Use “Use my location” or enter city and state above.',
               }}
             />
           ) : (
