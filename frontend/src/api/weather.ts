@@ -1,5 +1,6 @@
 /**
  * WeatherAPI.com — today’s snapshot + 7-day outlook for the home planner.
+ * Temperatures are US-style Fahrenheit from the API.
  *
  * Setup:
  * 1. Copy `frontend/.env.example` → `.env.local` (or create `.env.local`).
@@ -13,15 +14,15 @@ export type WeatherWeekDayRow = {
   date: string
   /** “Today” or short weekday */
   label: string
-  highTempC: number
-  lowTempC: number
+  highTempF: number
+  lowTempF: number
   conditionText: string
 }
 
 export type WeatherHomeOverview = {
-  currentTempC: number
-  highTempC: number
-  lowTempC: number
+  currentTempF: number
+  highTempF: number
+  lowTempF: number
   /** Short phrase, e.g. “Mostly sunny” */
   conditionText: string
   /** Usually 7 entries (today + next 6), or fewer if the plan limits days */
@@ -35,15 +36,15 @@ export function isWeatherApiConfigured(): boolean {
 
 type WeatherApiForecastJson = {
   current?: {
-    temp_c?: number
+    temp_f?: number
     condition?: { text?: string }
   }
   forecast?: {
     forecastday?: Array<{
       date?: string
       day?: {
-        maxtemp_c?: number
-        mintemp_c?: number
+        maxtemp_f?: number
+        mintemp_f?: number
         condition?: { text?: string }
       }
     }>
@@ -91,11 +92,11 @@ export async function fetchTodayWeatherOverview(
     throw new Error(msg)
   }
 
-  const currentTemp = data.current?.temp_c
+  const currentTemp = data.current?.temp_f
   const forecastDays = data.forecast?.forecastday ?? []
   const todayBlock = forecastDays[0]?.day
-  const high = todayBlock?.maxtemp_c
-  const low = todayBlock?.mintemp_c
+  const high = todayBlock?.maxtemp_f
+  const low = todayBlock?.mintemp_f
 
   if (
     typeof currentTemp !== 'number' ||
@@ -115,22 +116,22 @@ export async function fetchTodayWeatherOverview(
     const fd = forecastDays[i]
     const date = fd.date?.trim() ?? `day-${i}`
     const d = fd.day
-    const hi = d?.maxtemp_c
-    const lo = d?.mintemp_c
+    const hi = d?.maxtemp_f
+    const lo = d?.mintemp_f
     if (typeof hi !== 'number' || typeof lo !== 'number') continue
     week.push({
       date,
       label: weekdayShortLabel(date, i === 0),
-      highTempC: hi,
-      lowTempC: lo,
+      highTempF: hi,
+      lowTempF: lo,
       conditionText: toSentenceCase(d?.condition?.text ?? '') || '—',
     })
   }
 
   return {
-    currentTempC: currentTemp,
-    highTempC: high,
-    lowTempC: low,
+    currentTempF: currentTemp,
+    highTempF: high,
+    lowTempF: low,
     conditionText: toSentenceCase(rawCondition) || '—',
     week,
   }

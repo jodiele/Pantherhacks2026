@@ -108,11 +108,20 @@ export function UvPage() {
               </div>
               <div className="uv-meta">
                 <p className="uv-band">{uvTips.band} exposure</p>
-                {uvPlaceLabel ? (
-                  <p className="uv-loc">{uvPlaceLabel}</p>
-                ) : uvCoords ? (
+                {uvCoords ? (
                   <p className="uv-loc">
-                    {uvCoords.lat.toFixed(2)}°, {uvCoords.lon.toFixed(2)}°
+                    {uvPlaceLabel ? (
+                      <>
+                        {uvPlaceLabel}{' '}
+                        <span className="uv-loc-coords">
+                          ({uvCoords.lat.toFixed(2)}°, {uvCoords.lon.toFixed(2)}°)
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        {uvCoords.lat.toFixed(2)}°, {uvCoords.lon.toFixed(2)}°
+                      </>
+                    )}
                   </p>
                 ) : null}
                 <p className="uv-summary">{uvTips.summary}</p>

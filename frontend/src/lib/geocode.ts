@@ -1,6 +1,9 @@
 /**
  * Open-Meteo geocoding (free, no API key).
  * https://open-meteo.com/en/docs/geocoding-api
+ *
+ * Reverse lookup for GPS: BigDataCloud client API (free, no key, browser-friendly).
+ * https://www.bigdatacloud.net/packages/reverse-geocoding
  */
 
 /** US two-letter → typical admin1 string returned by Open-Meteo */
@@ -181,5 +184,60 @@ export async function geocodeCityState(
     lat: pick.latitude,
     lon: pick.longitude,
     label: formatLabel(pick),
+  }
+}
+
+type BigDataCloudReverse = {
+  locality?: string
+  city?: string
+  principalSubdivision?: string
+  countryName?: string
+}
+
+/**
+ * Turn coordinates into a short label like “Mountain View, California”.
+ * Returns null if the lookup fails or the area has no usable fields.
+ */
+export async function reverseGeocodeLatLon(
+  lat: number,
+  lon: number,
+): Promise<string | null> {
+  const url = new URL('https://api.bigdatacloud.net/data/reverse-geocode-client')
+  url.searchParams.set('latitude', String(lat))
+  url.searchParams.set('longitude', String(lon))
+  url.searchParams.set('localityLanguage', 'en')
+
+  const controller = new AbortController()
+  const t = window.setTimeout(() => controller.abort(), 10_000)
+
+  try {
+    const res = await fetch(url.toString(), { signal: controller.signal })
+    if (!res.ok) return null
+    const data = (await res.json()) as BigDataCloudReverse
+
+    const place =
+      data.locality?.trim() ||
+      data.city?.trim() ||
+      ''
+    const region = data.principalSubdivision?.trim() || ''
+
+    if (place && region) {
+      if (place.toLowerCase() === region.toLowerCase()) {
+        return place
+      }
+      return `${place}, ${region}`
+    }
+    if (place) return place
+    if (region) return region
+
+    const country = data.countryName?.trim()
+    if (country) {
+      return country.replace(/\s*\(the\)\s*$/i, '').trim()
+    }
+    return null
+  } catch {
+    return null
+  } finally {
+    window.clearTimeout(t)
   }
 }

@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { useLocation } from 'react-router-dom'
 import { predictImage } from '../api/predict'
-import { geocodeCityState } from '../lib/geocode'
+import { geocodeCityState, reverseGeocodeLatLon } from '../lib/geocode'
 import type { PredictOk } from '../types/predict'
 import {
   estimateWarmthSignal,
@@ -34,7 +34,7 @@ type SunCheckContextValue = {
   warmthSignal: number | null
   uvIndex: number | null
   uvCoords: { lat: number; lon: number } | null
-  /** Set when location came from city/state search; null for GPS-only */
+  /** City/region label from city/state search or reverse geocode after GPS */
   uvPlaceLabel: string | null
   uvLoading: boolean
   uvError: string | null
@@ -158,7 +158,12 @@ export function SunCheckProvider({ children }: { children: ReactNode }) {
     setUvError(null)
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        void loadUvForCoords(pos.coords.latitude, pos.coords.longitude, null)
+        void (async () => {
+          const lat = pos.coords.latitude
+          const lon = pos.coords.longitude
+          const placeLabel = await reverseGeocodeLatLon(lat, lon)
+          await loadUvForCoords(lat, lon, placeLabel)
+        })()
       },
       (err) => {
         setUvLoading(false)

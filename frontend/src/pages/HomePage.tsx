@@ -146,8 +146,9 @@ export function HomePage() {
             <span className="home-saved-meta">
               {' '}
               (
-              {uvPlaceLabel ??
-                `${uvCoords.lat.toFixed(2)}°, ${uvCoords.lon.toFixed(2)}°`}
+              {uvPlaceLabel
+                ? `${uvPlaceLabel} (${uvCoords.lat.toFixed(2)}°, ${uvCoords.lon.toFixed(2)}°)`
+                : `${uvCoords.lat.toFixed(2)}°, ${uvCoords.lon.toFixed(2)}°`}
               {' · from UV tab'})
             </span>
           </p>
@@ -197,21 +198,24 @@ export function HomePage() {
                   <div className="home-weather-overview">
                     <div className="home-weather-current" aria-label="Current temperature">
                       <span className="home-weather-current-val">
-                        {Math.round(weatherOverview.currentTempC)}
+                        {Math.round(weatherOverview.currentTempF)}
                       </span>
-                      <span className="home-weather-current-unit">°C</span>
+                      <span className="home-weather-current-unit">°F</span>
                     </div>
-                    <p className="home-weather-hilo" aria-label="Today high and low">
+                    <p
+                      className="home-weather-hilo"
+                      aria-label={`Today high ${Math.round(weatherOverview.highTempF)}°F, low ${Math.round(weatherOverview.lowTempF)}°F`}
+                    >
                       <span className="home-weather-hilo-item">
                         <span className="home-weather-hilo-label">H</span>
-                        {Math.round(weatherOverview.highTempC)}°
+                        {Math.round(weatherOverview.highTempF)}°
                       </span>
                       <span className="home-weather-hilo-sep" aria-hidden>
                         ·
                       </span>
                       <span className="home-weather-hilo-item">
                         <span className="home-weather-hilo-label">L</span>
-                        {Math.round(weatherOverview.lowTempC)}°
+                        {Math.round(weatherOverview.lowTempF)}°
                       </span>
                     </p>
                     <p className="home-weather-condition">{weatherOverview.conditionText}</p>
@@ -223,9 +227,9 @@ export function HomePage() {
                     {weatherOverview.week.map((d) => (
                       <li key={d.date} className="home-weather-week-row">
                         <span className="home-weather-week-day">{d.label}</span>
-                        <span className="home-weather-week-temps" aria-label={`High ${Math.round(d.highTempC)}, low ${Math.round(d.lowTempC)}`}>
-                          <span className="home-weather-week-hi">{Math.round(d.highTempC)}°</span>
-                          <span className="home-weather-week-lo">{Math.round(d.lowTempC)}°</span>
+                        <span className="home-weather-week-temps" aria-label={`High ${Math.round(d.highTempF)}°F, low ${Math.round(d.lowTempF)}°F`}>
+                          <span className="home-weather-week-hi">{Math.round(d.highTempF)}°</span>
+                          <span className="home-weather-week-lo">{Math.round(d.lowTempF)}°</span>
                         </span>
                         <span className="home-weather-week-sum" title={d.conditionText}>
                           {d.conditionText}

@@ -824,6 +824,12 @@ header.brand .tagline {
   margin: 0 0 0.65rem;
 }
 
+.uv-loc-coords {
+  font-weight: 500;
+  opacity: 0.88;
+  white-space: nowrap;
+}
+
 .uv-summary {
   font-size: 0.9rem;
   color: var(--text);
