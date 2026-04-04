@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { useLocation } from 'react-router-dom'
 import { predictImage } from '../api/predict'
-import { parseCoord } from '../lib/format'
+import { geocodeCityState } from '../lib/geocode'
 import type { PredictOk } from '../types/predict'
 import {
   estimateWarmthSignal,
@@ -34,14 +34,16 @@ type SunCheckContextValue = {
   warmthSignal: number | null
   uvIndex: number | null
   uvCoords: { lat: number; lon: number } | null
+  /** Set when location came from city/state search; null for GPS-only */
+  uvPlaceLabel: string | null
   uvLoading: boolean
   uvError: string | null
-  manualLat: string
-  setManualLat: (s: string) => void
-  manualLon: string
-  setManualLon: (s: string) => void
+  manualCity: string
+  setManualCity: (s: string) => void
+  manualState: string
+  setManualState: (s: string) => void
   refreshUvFromLocation: () => void
-  applyManualCoords: () => void
+  applyCityStatePlace: () => Promise<void>
   startCamera: () => Promise<void>
   capturePhoto: () => Promise<void>
   onFileChange: (e: ChangeEvent<HTMLInputElement>) => void
@@ -73,10 +75,11 @@ export function SunCheckProvider({ children }: { children: ReactNode }) {
   const [uvCoords, setUvCoords] = useState<{ lat: number; lon: number } | null>(
     null,
   )
+  const [uvPlaceLabel, setUvPlaceLabel] = useState<string | null>(null)
   const [uvLoading, setUvLoading] = useState(false)
   const [uvError, setUvError] = useState<string | null>(null)
-  const [manualLat, setManualLat] = useState('')
-  const [manualLon, setManualLon] = useState('')
+  const [manualCity, setManualCity] = useState('')
+  const [manualState, setManualState] = useState('')
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop())
@@ -125,20 +128,26 @@ export function SunCheckProvider({ children }: { children: ReactNode }) {
     return () => stopCamera()
   }, [onScanPage, mode, startCamera, stopCamera])
 
-  const loadUvForCoords = useCallback(async (lat: number, lon: number) => {
-    setUvLoading(true)
-    setUvError(null)
-    try {
-      const uv = await fetchCurrentUv(lat, lon)
-      setUvIndex(uv)
-      setUvCoords({ lat, lon })
-    } catch (e) {
-      setUvError(e instanceof Error ? e.message : 'Could not load UV index.')
-      setUvIndex(null)
-    } finally {
-      setUvLoading(false)
-    }
-  }, [])
+  const loadUvForCoords = useCallback(
+    async (lat: number, lon: number, placeLabel: string | null = null) => {
+      setUvLoading(true)
+      setUvError(null)
+      try {
+        const uv = await fetchCurrentUv(lat, lon)
+        setUvIndex(uv)
+        setUvCoords({ lat, lon })
+        setUvPlaceLabel(placeLabel)
+      } catch (e) {
+        setUvError(e instanceof Error ? e.message : 'Could not load UV index.')
+        setUvIndex(null)
+        setUvCoords(null)
+        setUvPlaceLabel(null)
+      } finally {
+        setUvLoading(false)
+      }
+    },
+    [],
+  )
 
   const refreshUvFromLocation = useCallback(() => {
     if (!navigator.geolocation) {
@@ -149,13 +158,13 @@ export function SunCheckProvider({ children }: { children: ReactNode }) {
     setUvError(null)
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        void loadUvForCoords(pos.coords.latitude, pos.coords.longitude)
+        void loadUvForCoords(pos.coords.latitude, pos.coords.longitude, null)
       },
       (err) => {
         setUvLoading(false)
         setUvError(
           err.code === 1
-            ? 'Location permission denied. Enter coordinates below or enable location.'
+            ? 'Location permission denied. Enter city and state below or enable location.'
             : 'Could not read your location.',
         )
       },
@@ -163,15 +172,20 @@ export function SunCheckProvider({ children }: { children: ReactNode }) {
     )
   }, [loadUvForCoords])
 
-  const applyManualCoords = useCallback(() => {
-    const lat = parseCoord(manualLat, -90, 90)
-    const lon = parseCoord(manualLon, -180, 180)
-    if (lat === null || lon === null) {
-      setUvError('Enter valid latitude (−90–90) and longitude (−180–180).')
+  const applyCityStatePlace = useCallback(async () => {
+    setUvError(null)
+    let hit: Awaited<ReturnType<typeof geocodeCityState>>
+    try {
+      hit = await geocodeCityState(manualCity, manualState)
+    } catch (e) {
+      setUvError(e instanceof Error ? e.message : 'Could not find that place.')
+      setUvIndex(null)
+      setUvCoords(null)
+      setUvPlaceLabel(null)
       return
     }
-    void loadUvForCoords(lat, lon)
-  }, [manualLat, manualLon, loadUvForCoords])
+    await loadUvForCoords(hit.lat, hit.lon, hit.label)
+  }, [manualCity, manualState, loadUvForCoords])
 
   const runPredict = useCallback(async (file: File) => {
     setLoading(true)
@@ -269,14 +283,15 @@ export function SunCheckProvider({ children }: { children: ReactNode }) {
       warmthSignal,
       uvIndex,
       uvCoords,
+      uvPlaceLabel,
       uvLoading,
       uvError,
-      manualLat,
-      setManualLat,
-      manualLon,
-      setManualLon,
+      manualCity,
+      setManualCity,
+      manualState,
+      setManualState,
       refreshUvFromLocation,
-      applyManualCoords,
+      applyCityStatePlace,
       startCamera,
       capturePhoto,
       onFileChange,
@@ -294,12 +309,13 @@ export function SunCheckProvider({ children }: { children: ReactNode }) {
       warmthSignal,
       uvIndex,
       uvCoords,
+      uvPlaceLabel,
       uvLoading,
       uvError,
-      manualLat,
-      manualLon,
+      manualCity,
+      manualState,
       refreshUvFromLocation,
-      applyManualCoords,
+      applyCityStatePlace,
       startCamera,
       capturePhoto,
       onFileChange,

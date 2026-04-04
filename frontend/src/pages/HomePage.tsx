@@ -8,7 +8,7 @@ const featureCards = [
   {
     to: '/uv',
     title: 'UV & burn alerts',
-    text: 'Live index, coordinates, and burn-risk messaging.',
+    text: 'Live index, location or city/state, and burn-risk messaging.',
   },
   {
     to: '/scan',
@@ -29,7 +29,7 @@ const planIdeas = [
 ] as const
 
 export function HomePage() {
-  const { uvCoords } = useSunCheck()
+  const { uvCoords, uvPlaceLabel } = useSunCheck()
 
   const [planOpen, setPlanOpen] = useState(false)
   const [planLoading, setPlanLoading] = useState(false)
@@ -75,7 +75,7 @@ export function HomePage() {
         setPlanLoading(false)
         setPlanError(
           err.code === 1
-            ? 'Location denied. Use the UV tab to enter coordinates, then “Plan with saved spot” below.'
+            ? 'Location denied. Use the UV tab to enter city and state, then “Plan with saved spot” below.'
             : 'Could not read your location.',
         )
       },
@@ -140,7 +140,10 @@ export function HomePage() {
             </button>
             <span className="home-saved-meta">
               {' '}
-              ({uvCoords.lat.toFixed(2)}°, {uvCoords.lon.toFixed(2)}° from UV tab)
+              (
+              {uvPlaceLabel ??
+                `${uvCoords.lat.toFixed(2)}°, ${uvCoords.lon.toFixed(2)}°`}
+              {' · from UV tab'})
             </span>
           </p>
         )}
@@ -256,7 +259,7 @@ export function HomePage() {
 
       <p className="home-hint">
         Use the tabs above anytime. Load UV on the{' '}
-        <Link to="/uv">UV</Link> tab to sync burn alerts; your last coordinates can power{' '}
+        <Link to="/uv">UV</Link> tab to sync burn alerts; your last place can power{' '}
         <strong>Plan with saved spot</strong> here.
       </p>
     </div>

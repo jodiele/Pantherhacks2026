@@ -627,6 +627,30 @@ header.brand .tagline {
   flex: 1 1 120px;
 }
 
+.manual-place-hint {
+  margin: 0 0 0.65rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+  max-width: 52ch;
+}
+
+.manual-place-hint strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.manual-row--place .place-input--city {
+  flex: 2 1 160px;
+  min-width: 10rem;
+}
+
+.manual-row--place .place-input--state {
+  flex: 1 1 100px;
+  min-width: 6rem;
+  max-width: 10rem;
+}
+
 .uv-result {
   display: grid;
   grid-template-columns: auto 1fr;
