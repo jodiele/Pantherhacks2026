@@ -32,6 +32,31 @@ npm run dev
 
 Open the URL Vite prints (e.g. `http://localhost:5173`). The dev server proxies `/api` to the Flask app.
 
+## What’s in this repo (trimmed)
+
+Legacy notebooks, duplicate static sites, and old image folders were removed. What’s left:
+
+| Path | Purpose |
+|------|---------|
+| `app/` | Flask app: `inference.py` (model), `routes.py` (JSON API) |
+| `run.py` | Start the API server |
+| `skin-model-pokemon.pt` | PyTorch weights for `/api/predict` |
+| `requirements.txt` | Python dependencies |
+| `frontend/` | Vite + React UI (SunCheck) |
+
+Everything else you see locally (`node_modules/`, `.venv/`) is installed by npm/pip and is gitignored.
+
+## Train your own classifier (dry / oily / sunburnt, etc.)
+
+Put images in `data/<class>/` folders (gitignored), e.g. `data/dry/`, `data/oily/`, `data/sunburnt/`. Class indices follow **alphabetical** folder names. From the repo root:
+
+```bash
+source .venv/bin/activate
+python training/train.py --epochs 15
+```
+
+This writes `suncheck-model.pt` and `suncheck-classes.json`. If both exist, the API uses them (224×224 + ImageNet normalization). Older setups may still use `suncheck-dry-oily.pt` alone (two classes: dry, oily). Otherwise the app falls back to the legacy 9-class checkpoint. Restart Flask after training.
+
 ## Credits
 
 - Hackathon project for **PantherHacks 2026**.
