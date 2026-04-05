@@ -1,6 +1,6 @@
-import { BurnAlertCard } from '../components/BurnAlertCard'
+import { DayPlanSection } from '@/components/DayPlanSection'
 import { useSuntology } from '../context/SuntologyContext'
-import { burnAlertsForUv, uvGuidance } from '../sunburn'
+import { uvGuidance } from '../sunburn'
 
 export function UvPage() {
   const {
@@ -18,7 +18,6 @@ export function UvPage() {
   } = useSuntology()
 
   const uvTips = uvIndex !== null ? uvGuidance(uvIndex) : null
-  const liveBurnAlerts = uvIndex !== null ? burnAlertsForUv(uvIndex) : []
 
   return (
     <div className="page">
@@ -136,28 +135,7 @@ export function UvPage() {
         </div>
       </section>
 
-      <section className="section section--page" aria-labelledby="alerts-heading">
-        <h2 id="alerts-heading" className="section-title">
-          Burn alerts
-        </h2>
-        <p className="section-lead">
-          Alerts react to the <strong>current UV index</strong> for your location. Photo warmth
-          alerts appear on the <strong>Photo scan</strong> tab after you run a scan.
-        </p>
-        <div className="burn-alert-stack">
-          {uvIndex === null ? (
-            <BurnAlertCard
-              alert={{
-                level: 'info',
-                headline: 'Load UV to unlock live burn alerts',
-                body: 'Use “Use my location” or enter city and state above.',
-              }}
-            />
-          ) : (
-            liveBurnAlerts.map((a, i) => <BurnAlertCard key={i} alert={a} />)
-          )}
-        </div>
-      </section>
+      <DayPlanSection />
     </div>
   )
 }
