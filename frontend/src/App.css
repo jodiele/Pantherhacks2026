@@ -1260,8 +1260,6 @@ header.brand .tagline {
 }
 
 .upload-zone {
-  border-style: dashed;
-  border-color: rgba(94, 234, 212, 0.38);
   display: block;
   position: relative;
   width: 100%;
@@ -1273,9 +1271,9 @@ header.brand .tagline {
   text-align: center;
   color: rgba(255, 255, 255, 0.82);
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
-  /* Solid border avoids dashed + border-radius glitches; “drop” cue via inset ring */
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-width: 1px;
+  border-style: dashed;
+  border-color: rgba(94, 234, 212, 0.38);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   transition:
     border-color 0.15s,
@@ -1309,6 +1307,12 @@ header.brand .tagline {
 
 .upload-zone strong {
   color: var(--mint-emphasis);
+}
+
+/* Wins over `.app .upload-zone` shared panel border so dashed mint shows */
+.app .panel .upload-zone {
+  border-style: dashed;
+  border-color: rgba(94, 234, 212, 0.38);
 }
 
 .preview-row {
