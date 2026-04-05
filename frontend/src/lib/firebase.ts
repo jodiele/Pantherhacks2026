@@ -21,7 +21,9 @@ let app: FirebaseApp | null = null
 
 export function getFirebaseApp(): FirebaseApp {
   if (!isFirebaseConfigured()) {
-    throw new Error('Firebase is not configured. Add VITE_FIREBASE_* variables.')
+    throw new Error(
+      'Firebase is not configured. Add VITE_FIREBASE_* to frontend/.env.local and restart the dev server.',
+    )
   }
   if (!app) {
     app = initializeApp(readFirebaseConfig())

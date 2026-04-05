@@ -5,6 +5,7 @@ from PIL import Image
 from werkzeug.utils import secure_filename
 
 from app import app
+from app.chat_assistant import run_chat, sanitize_messages
 from app.inference import predict_image, load_model
 
 
@@ -35,6 +36,33 @@ def api_predict():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/api/chat", methods=["POST"])
+def api_chat():
+    """
+    JSON body: { "messages": [...], "scan_context": { ... } }
+
+    LLM env (first match wins): MISTRAL_API_KEY + optional MISTRAL_AGENT_ID (Mistral Agents beta
+    POST /v1/conversations), or MISTRAL_API_KEY alone (chat completions, MISTRAL_MODEL default
+    mistral-small-latest), or OPENAI_API_KEY. Without keys, returns demo replies.
+    Optional: MISTRAL_AGENT_VERSION (default 0).
+    """
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Expected JSON object body."}), 400
+
+    messages, err = sanitize_messages(data.get("messages"))
+    if err:
+        return jsonify({"error": err}), 400
+
+    scan_context = data.get("scan_context")
+    if scan_context is not None and not isinstance(scan_context, dict):
+        return jsonify({"error": "scan_context must be an object if provided."}), 400
+    ctx = scan_context if isinstance(scan_context, dict) else {}
+
+    reply = run_chat(ctx, messages)
+    return jsonify({"reply": reply})
+
+
 @app.route("/", methods=["GET"])
 def root():
     return jsonify(
@@ -42,5 +70,6 @@ def root():
             "name": "Skintology API",
             "health": "/api/health",
             "predict": "POST /api/predict (multipart: file or image)",
+            "chat": "POST /api/chat (JSON: messages, scan_context)",
         }
     )

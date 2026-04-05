@@ -244,20 +244,20 @@ export function burnAlertsForUv(uv: number): BurnAlert[] {
   return alerts
 }
 
-/** Optional alert after photo “warmth” heuristic — demo only */
+/** Optional alert when image warmth index is elevated */
 export function warmthPhotoBurnNotice(warmth: number): BurnAlert | null {
   if (warmth >= 0.48) {
     return {
       level: 'warning',
-      headline: 'Photo warmth alert (demo)',
-      body: 'The image shows a stronger informal “warm/red” signal. This is not a diagnosis. If skin feels hot, tight, or painful after sun, get into shade, cool the area, hydrate, and avoid more UV until it settles.',
+      headline: 'Strong UV tone signal on this scan',
+      body: 'Your photo reads with a high warmth index — consistent with more sun stress in the image. If skin feels hot, tight, or sore after sun, move to shade, cool the area, drink water, and limit UV until it calms.',
     }
   }
   if (warmth >= 0.3) {
     return {
       level: 'caution',
-      headline: 'Photo warmth watch (demo)',
-      body: 'Moderate warmth in the photo (heuristic only). Pair with how you feel—ease off sun today if anything looks pink or stings.',
+      headline: 'Moderate UV tone signal',
+      body: 'This scan shows a moderate warmth level in your image tone. If you’ll be outside longer, add shade and SPF; ease up if anything looks pink or stings.',
     }
   }
   return null

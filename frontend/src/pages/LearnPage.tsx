@@ -1,3 +1,4 @@
+import { LearnPageChat } from '../components/LearnPageChat'
 import {
   CANCER_AWARENESS_INTRO,
   CANCER_AWARENESS_POINTS,
@@ -54,6 +55,20 @@ export function LearnPage() {
             ))}
           </ul>
         </div>
+      </section>
+
+      <section
+        className="section section--page"
+        aria-labelledby="learn-chat-heading"
+      >
+        <h2 id="learn-chat-heading" className="section-title">
+          Questions?
+        </h2>
+        <p className="section-lead">
+          Chat below about sun safety, SPF, or what you read on this page — same assistant as after a photo
+          scan, tuned for general education here.
+        </p>
+        <LearnPageChat />
       </section>
     </div>
   )

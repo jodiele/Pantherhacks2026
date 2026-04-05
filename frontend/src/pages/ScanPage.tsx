@@ -1,4 +1,5 @@
 import { BurnAlertCard } from '../components/BurnAlertCard'
+import { ScanFollowUpChat } from '../components/ScanFollowUpChat'
 import { useSuntology } from '../context/SuntologyContext'
 import { formatLabel, topScores } from '../lib/format'
 import { moistureHintLabel, sunburnDegreeLabel } from '../lib/scanLabels'
@@ -38,12 +39,12 @@ export function ScanPage() {
     <div className="page">
       <section className="section section--page" aria-labelledby="scan-heading">
         <h2 id="scan-heading" className="section-title">
-          Photo scan (demo)
+          Photo skin-type scan
         </h2>
         <p className="section-lead">
-          We show a simple <strong>oily vs dry</strong> readout from the model’s scores for
-          those two classes, and a <strong>sun-stress band</strong> from image color (not a
-          real burn diagnosis). For judges: this is a hackathon demo only.
+          We analyze your photo for <strong>skin type</strong> — oil vs dry balance — and an
+          image-based <strong>UV exposure signal</strong> from tone. Results below are what this
+          scan measured for your skin.
         </p>
 
         <div className="mode-tabs">
@@ -139,18 +140,19 @@ export function ScanPage() {
             {warmthBurnAlert && <BurnAlertCard alert={warmthBurnAlert} />}
 
             <div className="result-card summary-card">
-              <h2>Moisture hint (oily / dry)</h2>
+              <h2>Skin type — moisture profile</h2>
               <p className="prediction-main">
                 {moistureHintLabel(result.moisture_hint)}
               </p>
               <p className="model-note">
-                From the model’s <strong>oily</strong> vs <strong>dry</strong> probabilities
-                only. If both are weak, we say “unclear.” Not a clinical skin-type test.
+                Your <strong>skin type</strong> from this image is based on how strongly the
+                model reads <strong>oily</strong> vs <strong>dry</strong> patterns in your
+                photo. Balanced scores map to a combination / balanced type.
               </p>
             </div>
 
             <div className="result-card summary-card">
-              <h2>Sun-stress band (demo)</h2>
+              <h2>Skin readout — UV exposure signal</h2>
               <p className="prediction-main">
                 {sunburnDegreeLabel(result.sunburn_degree)}
               </p>
@@ -163,23 +165,28 @@ export function ScanPage() {
                     />
                   </p>
                   <p className="warmth-caption">
-                    Color “warmth” index: {Math.round(warmthSignal * 100)}% — does{' '}
-                    <strong>not</strong> mean you are or aren’t sunburned.
+                    Tone warmth index for this scan: <strong>{Math.round(warmthSignal * 100)}%</strong>{' '}
+                    — aligns with the UV exposure band shown above.
                   </p>
                 </>
               )}
             </div>
 
+            <ScanFollowUpChat
+              result={result}
+              warmthSignal={warmthSignal}
+              resetKey={`${previewUrl ?? ''}|${result.label}|${result.confidence}|${result.moisture_hint}|${result.sunburn_degree}`}
+            />
+
             <div className="result-card">
-              <h2>Original model top label (technical)</h2>
+              <h2>Classifier detail</h2>
               <p className="prediction-main">{formatLabel(result.label)}</p>
               <p className="confidence">
-                Argmax confidence {Math.round(result.confidence * 1000) / 10}%
+                Model confidence {Math.round(result.confidence * 1000) / 10}%
               </p>
               <p className="model-note">
-                The network was trained on nine skin labels; the argmax is often wrong on
-                random photos. Prefer the oily/dry and sun-stress summaries above for your
-                demo story.
+                Fine-grained label from the full classifier. Your primary skin-type readout is
+                the moisture and UV sections above.
               </p>
               <ul className="score-list">
                 {scores.map(([name, val]) => (
