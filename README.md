@@ -32,6 +32,12 @@ Firebase Authentication: Login/signup to save account information on skin detail
 **Frontend** React 19, TypeScript, Vite 8, Tailwind CSS 4, React Router 7, Framer Motion, Firebase Auth, MediaPipe Tasks Vision, shadcn-style UI pieces
 **Backend** Python 3.10+, Flask, PyTorch
 
-Shortcut from the same folder:
-
 Ran using localhost
+Steps to run locally:
+(NOTE: may not be able to run locally for others due to api keys)
+
+- cd /path/to/suntology
+- python3 run.py
+- npm run api
+second terminal:
+- npm run dev
