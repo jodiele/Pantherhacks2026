@@ -8,11 +8,11 @@ export function HomePage() {
           Welcome
         </h2>
         <p className="section-lead">
-          Set your location on the <strong>UV &amp; alerts</strong> tab, then plan around
+          Set your location on the <strong>UV Planning</strong> tab, then plan around
           today&apos;s peak and hourly curve.
         </p>
         <Link to="/uv" className="btn btn-primary">
-          Go to UV &amp; planning
+          Go to UV Planning
         </Link>
       </section>
 

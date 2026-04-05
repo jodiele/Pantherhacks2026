@@ -24,7 +24,7 @@ export function AboutPage() {
             hackathon judges.
           </p>
           <p className="filler-cta">
-            <Link to="/uv">Check UV & alerts</Link>
+            <Link to="/uv">Check UV planning</Link>
             {' · '}
             <Link to="/scan">Try photo scan</Link>
           </p>
