@@ -69,6 +69,11 @@
     border-color 0.15s;
 }
 
+button.nav-tab {
+  cursor: pointer;
+  background: transparent;
+}
+
 .nav-tab:hover {
   color: var(--text);
   background: rgba(255, 255, 255, 0.04);
