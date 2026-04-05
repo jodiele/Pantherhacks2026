@@ -14,96 +14,150 @@ export const ZONES = [
   {
     id: 'fore_left',
     label: 'Forehead (left)',
+    segmentLabel: 'Left',
     path: 'M 10 24 L 36 24 L 36 44 L 10 44 Z',
     hit: { minX: 10, minY: 24, maxX: 36, maxY: 44 },
   },
   {
     id: 'fore_mid',
     label: 'Forehead (center)',
+    segmentLabel: 'Center',
     path: 'M 36 24 L 64 24 L 64 44 L 36 44 Z',
     hit: { minX: 36, minY: 24, maxX: 64, maxY: 44 },
   },
   {
     id: 'fore_right',
     label: 'Forehead (right)',
+    segmentLabel: 'Right',
     path: 'M 64 24 L 90 24 L 90 44 L 64 44 Z',
     hit: { minX: 64, minY: 24, maxX: 90, maxY: 44 },
   },
   {
     id: 'upper_left',
     label: 'Upper face (left)',
+    segmentLabel: 'Left',
     path: 'M 9 44 L 36 44 L 36 64 L 9 64 Z',
     hit: { minX: 9, minY: 44, maxX: 36, maxY: 64 },
   },
   {
     id: 'upper_mid',
     label: 'Upper face (center)',
+    segmentLabel: 'Center',
     path: 'M 36 44 L 64 44 L 64 64 L 36 64 Z',
     hit: { minX: 36, minY: 44, maxX: 64, maxY: 64 },
   },
   {
     id: 'upper_right',
     label: 'Upper face (right)',
+    segmentLabel: 'Right',
     path: 'M 64 44 L 91 44 L 91 64 L 64 64 Z',
     hit: { minX: 64, minY: 44, maxX: 91, maxY: 64 },
   },
   {
     id: 'mid_left',
     label: 'Mid face (left)',
+    segmentLabel: 'Left',
     path: 'M 8 64 L 36 64 L 36 86 L 8 86 Z',
     hit: { minX: 8, minY: 64, maxX: 36, maxY: 86 },
   },
   {
     id: 'mid_center',
     label: 'Mid face (nose/center)',
+    segmentLabel: 'Nose',
     path: 'M 36 64 L 64 64 L 64 86 L 36 86 Z',
     hit: { minX: 36, minY: 64, maxX: 64, maxY: 86 },
   },
   {
     id: 'mid_right',
     label: 'Mid face (right)',
+    segmentLabel: 'Right',
     path: 'M 64 64 L 92 64 L 92 86 L 64 86 Z',
     hit: { minX: 64, minY: 64, maxX: 92, maxY: 86 },
   },
   {
     id: 'lower_face_left',
     label: 'Lower face (left)',
+    segmentLabel: 'Left',
     path: 'M 10 86 L 38 86 L 38 108 L 10 108 Z',
     hit: { minX: 10, minY: 86, maxX: 38, maxY: 108 },
   },
   {
     id: 'lower_face_mid',
     label: 'Lower face (center)',
+    segmentLabel: 'Center',
     path: 'M 38 86 L 62 86 L 62 108 L 38 108 Z',
     hit: { minX: 38, minY: 86, maxX: 62, maxY: 108 },
   },
   {
     id: 'lower_face_right',
     label: 'Lower face (right)',
+    segmentLabel: 'Right',
     path: 'M 62 86 L 90 86 L 90 108 L 62 108 Z',
     hit: { minX: 62, minY: 86, maxX: 90, maxY: 108 },
   },
   {
     id: 'jaw_left',
     label: 'Jaw (left)',
+    segmentLabel: 'Left',
     path: 'M 12 109 L 40 109 L 42 132 L 14 132 Z',
     hit: { minX: 10, minY: 109, maxX: 42, maxY: 132 },
   },
   {
     id: 'jaw_center',
     label: 'Chin (center)',
+    segmentLabel: 'Chin',
     path: 'M 38 109 L 62 109 L 62 132 L 38 132 Z',
     hit: { minX: 38, minY: 109, maxX: 62, maxY: 132 },
   },
   {
     id: 'jaw_right',
     label: 'Jaw (right)',
+    segmentLabel: 'Right',
     path: 'M 60 109 L 88 109 L 86 132 L 58 132 Z',
     hit: { minX: 58, minY: 109, maxX: 90, maxY: 132 },
   },
 ] as const
 
 export type ZoneId = (typeof ZONES)[number]['id']
+
+/** Row bands inside the oval — each category maps to 3 left/center/right cells. */
+export const ZONE_CATEGORIES: ReadonlyArray<{
+  id: string
+  title: string
+  zoneIds: readonly ZoneId[]
+}> = [
+  {
+    id: 'forehead',
+    title: 'Forehead',
+    zoneIds: ['fore_left', 'fore_mid', 'fore_right'],
+  },
+  {
+    id: 'upper',
+    title: 'Upper face',
+    zoneIds: ['upper_left', 'upper_mid', 'upper_right'],
+  },
+  {
+    id: 'mid',
+    title: 'Mid face',
+    zoneIds: ['mid_left', 'mid_center', 'mid_right'],
+  },
+  {
+    id: 'lower',
+    title: 'Lower face',
+    zoneIds: ['lower_face_left', 'lower_face_mid', 'lower_face_right'],
+  },
+  {
+    id: 'jaw',
+    title: 'Jaw & chin',
+    zoneIds: ['jaw_left', 'jaw_center', 'jaw_right'],
+  },
+]
+
+export function zoneById(id: ZoneId): (typeof ZONES)[number] {
+  const z = ZONES.find((x) => x.id === id)
+  if (!z) throw new Error(`Unknown zone: ${id}`)
+  return z
+}
 
 export function initialCoverage(): Record<ZoneId, boolean> {
   return Object.fromEntries(ZONES.map((z) => [z.id, false])) as Record<
