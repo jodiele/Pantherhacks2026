@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import HeroWave from '@/components/ui/dynamic-wave-canvas-background'
-import { NavTabs } from '../components/NavTabs'
+import { MiniNavbar } from '@/components/ui/mini-navbar'
 import { FirstVisitGate } from './FirstVisitGate'
 
 export function AppLayout() {
@@ -8,21 +8,10 @@ export function AppLayout() {
     <FirstVisitGate>
       <div className="app relative isolate">
         <HeroWave />
-        <div className="relative z-10 flex min-h-svh flex-1 flex-col">
-          <div className="disclaimer">
-            <strong>Not medical advice.</strong> Suntology shares UV-based burn alerts, informal
-            photo hints, and cancer-risk education for awareness only. It does not diagnose
-            sunburn, skin cancer, or any disease—see a qualified clinician for evaluation.
-          </div>
+        <div className="relative z-10 flex min-h-svh flex-1 flex-col pt-[6.5rem]">
+          <MiniNavbar />
 
           <div className="shell shell--with-nav flex-1">
-            <header className="brand brand--compact">
-              <p className="tagline">PantherHacks · Suntology</p>
-              <h1>Suntology</h1>
-            </header>
-
-            <NavTabs />
-
             <main className="page-main">
               <Outlet />
             </main>

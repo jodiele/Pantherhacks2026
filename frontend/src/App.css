@@ -4,22 +4,62 @@
   flex-direction: column;
 }
 
-.disclaimer {
-  background: linear-gradient(
-    90deg,
-    rgba(251, 191, 36, 0.12),
-    rgba(94, 234, 212, 0.08)
-  );
-  border-bottom: 1px solid var(--border);
-  padding: 0.65rem 1.25rem;
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  text-align: center;
+/* Mint emphasis — same as hero “UV peaks today” / Plan your day vibe */
+.app strong,
+.app b {
+  color: var(--mint-emphasis);
+  font-weight: 700;
+  text-shadow: var(--mint-glow);
 }
 
-.disclaimer strong {
-  color: var(--warning);
-  font-weight: 600;
+/* Shared “block” chrome — hero tip rows, panels, cards, meters */
+.app .panel,
+.app .result-card,
+.app .home-plan-panel,
+.app .home-peak-card,
+.app .home-weather-card,
+.app .home-vibe,
+.app .home-uv-chart,
+.app .uv-meter,
+.app .burn-alert,
+.app .upload-zone {
+  background:
+    linear-gradient(160deg, rgba(94, 234, 212, 0.1) 0%, transparent 46%),
+    rgba(10, 14, 12, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 4px 22px rgba(0, 0, 0, 0.26);
+}
+
+.app .burn-alert--caution {
+  background:
+    linear-gradient(160deg, rgba(251, 191, 36, 0.14) 0%, transparent 50%),
+    rgba(18, 14, 8, 0.92) !important;
+  border-color: rgba(251, 191, 36, 0.5) !important;
+}
+
+.app .burn-alert--warning {
+  background:
+    linear-gradient(160deg, rgba(248, 113, 113, 0.12) 0%, transparent 50%),
+    rgba(20, 10, 10, 0.92) !important;
+  border-color: rgba(248, 113, 113, 0.48) !important;
+}
+
+.app .burn-alert--info {
+  border-color: rgba(94, 234, 212, 0.42);
+}
+
+.app .education-list li {
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background:
+    linear-gradient(160deg, rgba(94, 234, 212, 0.09) 0%, transparent 48%),
+    rgba(10, 14, 12, 0.88);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 2px 16px rgba(0, 0, 0, 0.2);
 }
 
 .shell {
@@ -28,10 +68,28 @@
   margin: 0 auto;
   padding: 2rem 1.25rem 3rem;
   width: 100%;
+  background: rgba(10, 14, 12, 0.82);
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: var(--text);
 }
 
 .shell--with-nav {
-  padding-top: 1.5rem;
+  padding-top: 2rem;
+}
+
+@media (max-width: 640px) {
+  .shell {
+    margin-left: 0.65rem;
+    margin-right: 0.65rem;
+    width: auto;
+    max-width: calc(100% - 1.3rem);
+  }
 }
 
 .brand--compact h1 {
@@ -61,7 +119,7 @@
   padding: 0.45rem 0.85rem;
   border-radius: 999px;
   border: 1px solid transparent;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.72);
   text-decoration: none;
   transition:
     background 0.15s,
@@ -75,8 +133,8 @@ button.nav-tab {
 }
 
 .nav-tab:hover {
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .nav-tab--active {
@@ -112,16 +170,22 @@ button.nav-tab {
   margin-bottom: 0;
 }
 
-.home-hero {
+.app .home-hero {
   margin-bottom: 2rem;
   padding: 1.35rem 1.25rem 1.5rem;
   border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: linear-gradient(
-    145deg,
-    rgba(94, 234, 212, 0.08),
-    rgba(251, 191, 36, 0.06)
-  );
+  background:
+    linear-gradient(
+      145deg,
+      rgba(94, 234, 212, 0.14),
+      rgba(251, 191, 36, 0.09)
+    ),
+    linear-gradient(160deg, rgba(94, 234, 212, 0.08) 0%, transparent 46%),
+    rgba(10, 14, 12, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 4px 22px rgba(0, 0, 0, 0.26);
 }
 
 .home-hero-title {
@@ -137,15 +201,11 @@ button.nav-tab {
   margin: 0 0 1.15rem;
   font-size: 1rem;
   line-height: 1.55;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.93);
   max-width: 48ch;
 }
 
-.home-hero-sub strong {
-  color: var(--accent);
-  font-weight: 600;
-}
-
+/* Explicit mint — avoids muddy accent from mixed shadcn / Suntology vars */
 .home-hero-tips {
   list-style: none;
   margin: 0 0 1rem;
@@ -166,33 +226,39 @@ button.nav-tab {
   gap: 0.45rem;
   width: 100%;
   text-align: left;
-  padding: 0.45rem 0.5rem;
+  padding: 0.55rem 0.65rem;
   margin: 0;
   font: inherit;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--heading);
-  background: rgba(0, 0, 0, 0.12);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
   cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   transition:
     background 0.15s ease,
-    border-color 0.15s ease;
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .home-hero-tip-btn:hover {
-  background: rgba(94, 234, 212, 0.1);
-  border-color: rgba(94, 234, 212, 0.25);
+  background: rgba(94, 234, 212, 0.14);
+  border-color: rgba(94, 234, 212, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(45, 212, 191, 0.12);
 }
 
 .home-hero-tip-btn.is-open {
-  border-color: rgba(251, 191, 36, 0.35);
+  border-color: rgba(251, 191, 36, 0.55);
+  background: rgba(251, 191, 36, 0.1);
 }
 
 .home-hero-tip-chevron {
   font-size: 0.65rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.55);
   width: 1rem;
   flex-shrink: 0;
 }
@@ -216,8 +282,8 @@ button.nav-tab {
   margin: 0;
   padding: 0.45rem 0.5rem 0.15rem 1.65rem;
   font-size: 0.8125rem;
-  line-height: 1.5;
-  color: var(--text-muted);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.84);
 }
 
 .home-vibe {
@@ -225,14 +291,9 @@ button.nav-tab {
   padding: 0.75rem 0.95rem;
   font-size: 0.9rem;
   line-height: 1.5;
-  color: var(--text);
+  color: rgba(255, 255, 255, 0.92);
   border-radius: 10px;
-  border: 1px solid rgba(94, 234, 212, 0.22);
-  background: linear-gradient(
-    120deg,
-    rgba(94, 234, 212, 0.08),
-    rgba(251, 191, 36, 0.05)
-  );
+  border-color: rgba(94, 234, 212, 0.38);
 }
 
 @keyframes homeFadeSlideUp {
@@ -323,8 +384,53 @@ button.nav-tab {
   margin-bottom: 2rem;
   padding: 1.25rem 1.2rem;
   border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: var(--bg-elevated);
+}
+
+.uv-plan-panel {
+  margin-top: 1.25rem;
+}
+
+.uv-day-plan-section .home-hero {
+  margin-bottom: 1.15rem;
+}
+
+.uv-plan-hero-alt {
+  margin: 0.85rem 0 0;
+}
+
+.uv-plan-location-notice {
+  margin: 0 0 0.85rem;
+  max-width: 52ch;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.uv-plan-saved-meta {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0 0 0.85rem;
+  max-width: 52ch;
+  line-height: 1.45;
+}
+
+.uv-plan-hint {
+  margin: 0 0 0.85rem;
+  max-width: 52ch;
+  line-height: 1.5;
+}
+
+.home-soon-section {
+  margin-top: 0.5rem;
+}
+
+.home-soon-placeholder {
+  padding: 1.25rem 1.2rem;
+  border-radius: var(--radius);
+}
+
+.home-soon-lead {
+  margin-bottom: 0;
+  max-width: 48ch;
 }
 
 .home-plan-title {
@@ -339,8 +445,6 @@ button.nav-tab {
 .home-peak-card {
   padding: 1.1rem 1.2rem;
   border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--surface);
   margin-bottom: 1.25rem;
 }
 
@@ -412,8 +516,6 @@ button.nav-tab {
 .home-uv-chart {
   width: 100%;
   border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.12);
   padding: 0.75rem 0.65rem 0.5rem;
   overflow: hidden;
 }
@@ -489,8 +591,8 @@ button.nav-tab {
 .home-weather-card {
   padding: 1rem 1.05rem;
   border-radius: 12px;
-  border: 1px dashed rgba(255, 255, 255, 0.12);
-  background: rgba(0, 0, 0, 0.15);
+  border-style: dashed;
+  border-color: rgba(94, 234, 212, 0.32);
   margin-bottom: 1.25rem;
 }
 
@@ -739,19 +841,34 @@ header.brand .tagline {
 }
 
 .section-title {
-  font-family: var(--font);
-  font-size: 1.15rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: clamp(1.65rem, 4vw, 2.15rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
   color: var(--heading);
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
 }
 
 .section-lead {
   margin: 0 0 1rem;
-  font-size: 0.9375rem;
-  color: var(--text-muted);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.93);
   max-width: 52ch;
-  line-height: 1.45;
+  line-height: 1.55;
+}
+
+.section-lead a {
+  color: var(--mint-emphasis);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-shadow: var(--mint-glow);
+}
+
+.section-lead a:hover {
+  color: #cffcea;
 }
 
 .sr-only {
@@ -790,7 +907,7 @@ header.brand .tagline {
 
 .coord-input {
   font-family: var(--font);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   padding: 0.5rem 0.65rem;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -800,18 +917,56 @@ header.brand .tagline {
   flex: 1 1 120px;
 }
 
+.app .coord-input {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background:
+    linear-gradient(160deg, rgba(94, 234, 212, 0.07) 0%, transparent 42%),
+    rgba(8, 12, 10, 0.78);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.app .coord-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.app .coord-input:focus {
+  outline: none;
+  border-color: rgba(94, 234, 212, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 2px rgba(45, 212, 191, 0.2);
+}
+
+.app .uv-panel .manual-coords.manual-place {
+  margin-top: 0.35rem;
+  padding: 0.85rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background:
+    linear-gradient(160deg, rgba(94, 234, 212, 0.08) 0%, transparent 48%),
+    rgba(0, 0, 0, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.app .manual-label {
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
 .manual-place-hint {
   margin: 0 0 0.65rem;
   font-size: 0.8125rem;
-  line-height: 1.45;
-  color: var(--text-muted);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
   max-width: 52ch;
 }
 
-.manual-place-hint strong {
-  color: var(--text);
-  font-weight: 600;
+.app .manual-place-hint {
+  font-size: 0.875rem;
 }
+
+/* Inherit global .app strong mint — do not override */
 
 .manual-row--place .place-input--city {
   flex: 2 1 160px;
@@ -848,8 +1003,6 @@ header.brand .tagline {
   min-width: 120px;
   padding: 1rem 1.25rem;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border);
 }
 
 .uv-value {
@@ -869,13 +1022,14 @@ header.brand .tagline {
 }
 
 .uv-band {
+  font-size: 1rem;
   font-weight: 600;
   color: var(--heading);
   margin: 0 0 0.25rem;
 }
 
 .uv-loc {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--text-muted);
   margin: 0 0 0.65rem;
 }
@@ -887,7 +1041,7 @@ header.brand .tagline {
 }
 
 .uv-summary {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--text);
   margin: 0 0 0.75rem;
   line-height: 1.45;
@@ -896,8 +1050,8 @@ header.brand .tagline {
 .tip-list {
   margin: 0;
   padding-left: 1.15rem;
-  color: var(--text-muted);
-  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.9375rem;
   line-height: 1.5;
 }
 
@@ -982,9 +1136,9 @@ header.brand .tagline {
   font-weight: 500;
   padding: 0.55rem 1.1rem;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.82);
   cursor: pointer;
   transition:
     background 0.15s,
@@ -993,8 +1147,9 @@ header.brand .tagline {
 }
 
 .mode-tabs button:hover {
-  color: var(--text);
-  border-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .mode-tabs button.active {
@@ -1013,11 +1168,10 @@ header.brand .tagline {
 }
 
 .panel {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.25rem;
   margin-bottom: 1.5rem;
+  color: var(--text);
 }
 
 .video-wrap {
@@ -1081,13 +1235,15 @@ header.brand .tagline {
 }
 
 .btn-ghost {
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .btn-ghost:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.42);
 }
 
 .file-input {
@@ -1104,6 +1260,8 @@ header.brand .tagline {
 }
 
 .upload-zone {
+  border-style: dashed;
+  border-color: rgba(94, 234, 212, 0.38);
   display: block;
   position: relative;
   width: 100%;
@@ -1113,8 +1271,9 @@ header.brand .tagline {
   border-radius: calc(var(--radius) - 4px);
   padding: 2rem 1rem;
   text-align: center;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.82);
   cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
   /* Solid border avoids dashed + border-radius glitches; “drop” cue via inset ring */
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
@@ -1149,7 +1308,7 @@ header.brand .tagline {
 }
 
 .upload-zone strong {
-  color: var(--accent);
+  color: var(--mint-emphasis);
 }
 
 .preview-row {
@@ -1179,8 +1338,6 @@ header.brand .tagline {
 }
 
 .result-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.25rem 1.35rem;
 }
@@ -1258,34 +1415,18 @@ header.brand .tagline {
 .burn-alert {
   border-radius: var(--radius);
   padding: 1rem 1.15rem;
-  border: 1px solid var(--border);
-  background: var(--surface);
-}
-
-.burn-alert--info {
-  border-color: rgba(94, 234, 212, 0.28);
-}
-
-.burn-alert--caution {
-  border-color: rgba(251, 191, 36, 0.45);
-  background: rgba(251, 191, 36, 0.06);
-}
-
-.burn-alert--warning {
-  border-color: rgba(248, 113, 113, 0.5);
-  background: rgba(248, 113, 113, 0.09);
 }
 
 .burn-alert-head {
   margin: 0 0 0.35rem;
   font-weight: 700;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   color: var(--heading);
 }
 
 .burn-alert-body {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   color: var(--text);
   line-height: 1.5;
 }
@@ -1310,12 +1451,11 @@ header.brand .tagline {
 }
 
 .education-list strong {
-  color: var(--heading);
   font-size: 0.9375rem;
 }
 
 .education-list span {
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.86);
   font-size: 0.875rem;
   line-height: 1.5;
 }
@@ -1358,8 +1498,11 @@ footer.foot {
   padding: 1.5rem 1.25rem;
   text-align: center;
   font-size: 0.75rem;
-  color: var(--text-muted);
-  border-top: 1px solid var(--border);
+  color: rgba(255, 255, 255, 0.65);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(8, 12, 10, 0.75);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 /* —— Sunscreen coverage map —— */
@@ -1682,23 +1825,34 @@ footer.foot {
   font-size: 0.875rem;
   padding: 0.6rem 0.75rem 0.6rem 0.85rem;
   border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--bg-elevated);
-  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background:
+    linear-gradient(160deg, rgba(94, 234, 212, 0.08) 0%, transparent 48%),
+    rgba(10, 14, 12, 0.88);
+  color: #ffffff;
   cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   transition:
     background 0.15s,
-    border-color 0.15s;
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 .coverage-zone-btn:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: var(--surface);
+  border-color: rgba(94, 234, 212, 0.45);
+  background:
+    linear-gradient(160deg, rgba(94, 234, 212, 0.16) 0%, transparent 50%),
+    rgba(12, 18, 16, 0.92);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(45, 212, 191, 0.1);
 }
 
 .coverage-zone-btn.is-done {
-  border-color: rgba(94, 234, 212, 0.35);
-  background: var(--accent-dim);
+  border-color: rgba(94, 234, 212, 0.5);
+  background:
+    linear-gradient(160deg, rgba(94, 234, 212, 0.14) 0%, transparent 52%),
+    rgba(14, 22, 19, 0.92);
 }
 
 .coverage-zone-btn-main {

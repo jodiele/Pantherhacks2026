@@ -154,6 +154,18 @@ a {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Suntology shell — high contrast on animated wave */
+  --text: #f0f6f3;
+  --text-muted: #c2cdc7;
+  --heading: #ffffff;
+  --accent: #7fe9d8;
+  /* Match hero “UV peaks today” + primary CTA */
+  --mint-emphasis: #a7f3d0;
+  --mint-glow: 0 0 14px rgba(45, 212, 191, 0.32);
+  --bg-elevated: #141c18;
+  --surface: #1a2420;
+  --border: rgba(255, 255, 255, 0.14);
 }
 
 @layer base {
