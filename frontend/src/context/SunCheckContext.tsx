@@ -14,7 +14,10 @@ import { useLocation } from 'react-router-dom'
 import { predictImage } from '../api/predict'
 import { geocodeCityState, reverseGeocodeLatLon } from '../lib/geocode'
 import type { PredictOk } from '../types/predict'
-import { fetchCurrentUv } from '../sunburn'
+import {
+  estimateWarmthSignal,
+  fetchCurrentUv,
+} from '../sunburn'
 
 type SunCheckContextValue = {
   mode: 'camera' | 'upload'
@@ -197,9 +200,11 @@ export function SunCheckProvider({ children }: { children: ReactNode }) {
     try {
       const data = await predictImage(file)
       setResult(data)
-      setWarmthSignal(
-        typeof data.warmth_signal === 'number' ? data.warmth_signal : null,
-      )
+      try {
+        setWarmthSignal(await estimateWarmthSignal(file))
+      } catch {
+        setWarmthSignal(null)
+      }
     } catch (e) {
       setScanError(e instanceof Error ? e.message : 'Request failed')
     } finally {

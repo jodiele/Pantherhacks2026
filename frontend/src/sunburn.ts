@@ -151,6 +151,34 @@ export function uvGuidance(uv: number): UvGuidance {
   }
 }
 
+/**
+ * Very rough pixel heuristic: higher when red channel dominates (demo only, not clinical).
+ */
+export async function estimateWarmthSignal(file: File): Promise<number> {
+  const bitmap = await createImageBitmap(file)
+  const canvas = document.createElement('canvas')
+  const w = 128
+  const h = Math.max(1, Math.round((bitmap.height / bitmap.width) * w))
+  canvas.width = w
+  canvas.height = h
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return 0
+  ctx.drawImage(bitmap, 0, 0, w, h)
+  bitmap.close()
+  const { data } = ctx.getImageData(0, 0, w, h)
+  let sum = 0
+  let n = 0
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i] / 255
+    const g = data[i + 1] / 255
+    const b = data[i + 2] / 255
+    const excess = Math.max(0, r - (g + b) / 2)
+    sum += excess
+    n += 1
+  }
+  return n ? Math.min(1, (sum / n) * 2) : 0
+}
+
 export const SUNBURN_CARE = [
   'Cool the skin with cool (not ice-cold) compresses or a cool shower.',
   'Moisturize with gentle, fragrance-free lotion after skin cools.',
