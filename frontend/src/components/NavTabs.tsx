@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/context/AuthContext'
 
 const tabs = [
   { to: '/', label: 'Home', end: true as boolean },
@@ -8,10 +9,23 @@ const tabs = [
   { to: '/learn', label: 'Learn', end: false },
   { to: '/about', label: 'About', end: false },
   { to: '/resources', label: 'Resources', end: false },
-  { to: '/auth', label: 'Sign in', end: false },
 ]
 
 export function NavTabs() {
+  const navigate = useNavigate()
+  const { user, signOut, firebaseReady, authLoading } = useAuth()
+
+  async function handleLogOut() {
+    try {
+      await signOut()
+    } catch {
+      /* surfaced in auth page if needed */
+    }
+    navigate('/auth', { replace: true })
+  }
+
+  const showLogOut = firebaseReady && !authLoading && Boolean(user)
+
   return (
     <nav className="main-nav" aria-label="Main">
       <div className="nav-tabs">
@@ -27,6 +41,24 @@ export function NavTabs() {
             {label}
           </NavLink>
         ))}
+        {showLogOut ? (
+          <button
+            type="button"
+            className="nav-tab"
+            onClick={handleLogOut}
+          >
+            Log out
+          </button>
+        ) : (
+          <NavLink
+            to="/auth"
+            className={({ isActive }) =>
+              `nav-tab${isActive ? ' nav-tab--active' : ''}`
+            }
+          >
+            Sign in
+          </NavLink>
+        )}
       </div>
     </nav>
   )
