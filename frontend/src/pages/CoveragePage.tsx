@@ -9,7 +9,9 @@ import {
   initialCoverage,
   normalizedTipToViewBox,
   type ZoneId,
+  ZONE_CATEGORIES,
   ZONES,
+  zoneById,
 } from '../lib/coverageZones'
 import {
   boundsToFittedOval,
@@ -562,21 +564,64 @@ export function CoveragePage() {
             </button>
           </div>
 
-          <ul className="coverage-zone-list">
-            {ZONES.map((z) => (
-              <li key={z.id}>
-                <button
-                  type="button"
-                  className={`coverage-zone-btn${covered[z.id] ? ' is-done' : ''}`}
-                  onClick={() => toggle(z.id)}
-                >
-                  <span className="coverage-zone-dot" aria-hidden />
-                  {z.label}
-                  {covered[z.id] ? ' — covered' : ' — tap when applied'}
-                </button>
-              </li>
-            ))}
-          </ul>
+          <div className="coverage-zone-categories">
+            {ZONE_CATEGORIES.map((cat) => {
+              const catZones = cat.zoneIds.map((id) => zoneById(id))
+              const nDone = catZones.filter((z) => covered[z.id]).length
+              const total = catZones.length
+              const catPct = total ? Math.round((nDone / total) * 100) : 0
+              const headingId = `coverage-cat-${cat.id}`
+              return (
+                <section key={cat.id} className="coverage-category" aria-labelledby={headingId}>
+                  <div className="coverage-category-tab">
+                    <div className="coverage-category-tab-row">
+                      <h3 id={headingId} className="coverage-category-title">
+                        {cat.title}
+                      </h3>
+                      <span className="coverage-category-fraction" aria-live="polite">
+                        {nDone}/{total}
+                      </span>
+                    </div>
+                    <div
+                      className="coverage-category-bar"
+                      role="progressbar"
+                      aria-valuemin={0}
+                      aria-valuemax={total}
+                      aria-valuenow={nDone}
+                      aria-label={`${cat.title}: ${nDone} of ${total} zones covered`}
+                    >
+                      <div
+                        className="coverage-category-bar-fill"
+                        style={{ width: `${catPct}%` }}
+                      />
+                    </div>
+                  </div>
+                  <ul className="coverage-zone-list coverage-zone-list--in-category">
+                    {catZones.map((z) => (
+                      <li key={z.id}>
+                        <button
+                          type="button"
+                          className={`coverage-zone-btn${covered[z.id] ? ' is-done' : ''}`}
+                          onClick={() => toggle(z.id)}
+                          aria-label={`${z.label}, ${covered[z.id] ? 'covered' : 'tap when product applied'}. Toggle.`}
+                        >
+                          <span className="coverage-zone-btn-main">
+                            <span className="coverage-zone-dot" aria-hidden />
+                            <span className="coverage-zone-name">{z.segmentLabel}</span>
+                          </span>
+                          <span
+                            className={`coverage-zone-status${covered[z.id] ? ' coverage-zone-status--done' : ''}`}
+                          >
+                            {covered[z.id] ? 'Covered' : 'Tap when applied'}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )
+            })}
+          </div>
 
           <p className="coverage-footnote">
             Oval size and aspect follow your detected face contour (smoothed each frame). Pose
