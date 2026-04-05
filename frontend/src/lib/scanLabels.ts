@@ -1,25 +1,27 @@
 import type { MoistureHint, SunburnDegree } from '../types/predict'
 
+/** Human-facing skin-type line from the moisture (oily vs dry) head. */
 export function moistureHintLabel(h: MoistureHint): string {
   switch (h) {
     case 'oily':
-      return 'Leans oily'
+      return 'Oily skin type'
     case 'dry':
-      return 'Leans dry'
+      return 'Dry skin type'
     default:
-      return 'Dry vs oily — unclear'
+      return 'Combination / balanced skin type'
   }
 }
 
+/** UV-related band from image warmth — shown as part of the skin readout. */
 export function sunburnDegreeLabel(d: SunburnDegree): string {
   switch (d) {
     case 'none':
-      return 'No strong sun-stress signal'
+      return 'Low UV exposure signal'
     case 'mild':
-      return 'Mild sun-stress signal (demo)'
+      return 'Mild UV exposure signal'
     case 'moderate':
-      return 'Moderate sun-stress signal (demo)'
+      return 'Moderate UV exposure signal'
     default:
-      return 'Strong sun-stress signal (demo)'
+      return 'Elevated UV exposure signal'
   }
 }

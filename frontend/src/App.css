@@ -1085,6 +1085,100 @@ header.brand .tagline {
   gap: 1rem;
 }
 
+.scan-chat-card h2 {
+  margin-bottom: 0.35rem;
+}
+
+.scan-chat-disclaimer {
+  margin: 0 0 0.85rem !important;
+}
+
+.scan-chat-log {
+  max-height: min(22rem, 52vh);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.5rem 0.15rem 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+}
+
+.scan-chat-bubble {
+  border-radius: 12px;
+  padding: 0.55rem 0.75rem;
+  max-width: 95%;
+}
+
+.scan-chat-bubble-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.scan-chat-bubble-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.scan-chat-bubble--user {
+  align-self: flex-end;
+  background: rgba(94, 234, 212, 0.12);
+  border: 1px solid rgba(94, 234, 212, 0.28);
+}
+
+.scan-chat-bubble--assistant {
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.scan-chat-bubble--typing .scan-chat-bubble-text {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.scan-chat-error {
+  margin: 0 0 0.5rem;
+}
+
+.scan-chat-compose {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: flex-end;
+}
+
+.scan-chat-input {
+  flex: 1 1 12rem;
+  min-height: 2.75rem;
+  resize: vertical;
+  font-family: var(--font);
+  font-size: 0.875rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+.scan-chat-input:focus {
+  outline: none;
+  border-color: rgba(94, 234, 212, 0.45);
+}
+
+.scan-chat-send {
+  flex-shrink: 0;
+}
+
 .warmth-card .warmth-bar-wrap {
   display: block;
   height: 10px;
@@ -1260,6 +1354,8 @@ header.brand .tagline {
 }
 
 .upload-zone {
+  border-style: dashed;
+  border-color: rgba(94, 234, 212, 0.38);
   display: block;
   position: relative;
   width: 100%;
@@ -1271,9 +1367,9 @@ header.brand .tagline {
   text-align: center;
   color: rgba(255, 255, 255, 0.82);
   cursor: pointer;
-  border-width: 1px;
-  border-style: dashed;
-  border-color: rgba(94, 234, 212, 0.38);
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  /* Solid border avoids dashed + border-radius glitches; “drop” cue via inset ring */
+  border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   transition:
     border-color 0.15s,
@@ -1307,12 +1403,6 @@ header.brand .tagline {
 
 .upload-zone strong {
   color: var(--mint-emphasis);
-}
-
-/* Wins over `.app .upload-zone` shared panel border so dashed mint shows */
-.app .panel .upload-zone {
-  border-style: dashed;
-  border-color: rgba(94, 234, 212, 0.38);
 }
 
 .preview-row {
@@ -1910,3 +2000,4 @@ footer.foot {
   color: var(--text-muted);
   line-height: 1.55;
 }
+

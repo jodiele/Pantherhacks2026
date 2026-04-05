@@ -1,4 +1,11 @@
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+# Always load repo-root .env (works even if you start Python from another cwd).
+_ROOT = Path(__file__).resolve().parent
+load_dotenv(_ROOT / ".env")
 
 from app import app
 

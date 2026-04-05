@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error(e)
       setAuthLoading(false)
       setAuthInitError(
-        'Firebase failed to start. Check .env.local for typos and restart the dev server.',
+        'Firebase failed to start. Check frontend/.env.local for typos and restart the dev server.',
       )
     }
   }, [])

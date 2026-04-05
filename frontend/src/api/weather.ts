@@ -2,11 +2,7 @@
  * WeatherAPI.com — today’s snapshot + 7-day outlook for the home planner.
  * Temperatures are US-style Fahrenheit from the API.
  *
- * Setup:
- * 1. Copy `frontend/.env.example` → `.env.local` (or create `.env.local`).
- * 2. Add:  VITE_WEATHER_API_KEY=paste_your_key_here
- * 3. Restart `npm run dev` (Vite only reads env at startup).
- *
+ * Set VITE_WEATHER_API_KEY in `frontend/.env.local` and restart `npm run dev`.
  * Free tier: https://www.weatherapi.com/
  */
 
