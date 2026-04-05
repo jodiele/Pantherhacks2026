@@ -6,7 +6,7 @@ Sun safety companion: **live UV index**, **burn alerts**, optional **photo scan*
 
 - UV index from [Open-Meteo](https://open-meteo.com/) (location or coordinates)
 - Burn-risk alerts tied to current UV
-- React (Vite) frontend + Flask API with PyTorch image classifier (`skin-model-pokemon.pt`)
+- React (Vite) frontend + Flask API with PyTorch image classifier (`suntology-model.pt` / `suncheck-model.pt` / `suncheck-dry-oily.pt`)
 - Client-side “warmth” signal on photos (informal demo only)
 
 ## Run locally
@@ -56,7 +56,7 @@ Legacy notebooks, duplicate static sites, and old image folders were removed. Wh
 |------|---------|
 | `app/` | Flask app: `inference.py` (model), `routes.py` (JSON API) |
 | `run.py` | Start the API server |
-| `skin-model-pokemon.pt` | PyTorch weights for `/api/predict` |
+| `suntology-model.pt`, `suncheck-model.pt`, `suncheck-dry-oily.pt` | PyTorch weights for `/api/predict` (see training section) |
 | `requirements.txt` | Python dependencies |
 | `frontend/` | Vite + React UI (Suntology) |
 
@@ -71,7 +71,7 @@ source .venv/bin/activate
 python training/train.py --epochs 15
 ```
 
-This writes `suntology-model.pt` and `suntology-classes.json`. If those are missing, the API still accepts the legacy names `suncheck-model.pt` and `suncheck-classes.json`. Older setups may use `suncheck-dry-oily.pt` alone (two classes: dry, oily). Otherwise the app falls back to the legacy 9-class checkpoint. Restart Flask after training.
+This writes `suntology-model.pt` and `suntology-classes.json`. If those are missing, the API still accepts the legacy names `suncheck-model.pt` and `suncheck-classes.json`. Older setups may use `suncheck-dry-oily.pt` alone (two classes: dry, oily). Without any of these files, `/api/predict` returns an error until you add weights. Restart Flask after training.
 
 ## Credits
 

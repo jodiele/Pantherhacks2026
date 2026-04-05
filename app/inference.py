@@ -12,39 +12,27 @@ _BUNDLE_JSON = os.path.join(BASE_DIR, "suntology-classes.json")
 _BUNDLE_PT_LEGACY = os.path.join(BASE_DIR, "suncheck-model.pt")
 _BUNDLE_JSON_LEGACY = os.path.join(BASE_DIR, "suncheck-classes.json")
 _LEGACY_TWOCLASS_PT = os.path.join(BASE_DIR, "suncheck-dry-oily.pt")
-_LEGACY_PT = os.path.join(BASE_DIR, "skin-model-pokemon.pt")
 
-LEGACY_SKIN_CLASSES = [
-    "acanthosis-nigricans",
-    "acne",
-    "acne-scars",
-    "alopecia-areata",
-    "dry",
-    "melasma",
-    "oily",
-    "vitiligo",
-    "warts",
-]
+_MODEL_MISSING_MESSAGE = (
+    "No classifier weights found. Add one of: suntology-model.pt + suntology-classes.json, "
+    "suncheck-model.pt + suncheck-classes.json, or suncheck-dry-oily.pt next to run.py."
+)
 
 # Custom fine-tuned ResNet18: 224px + ImageNet norm. Prefer suntology bundle, then legacy suncheck names.
 if os.path.isfile(_BUNDLE_PT) and os.path.isfile(_BUNDLE_JSON):
     MODEL_PATH = _BUNDLE_PT
-    _USE_CUSTOM = True
     with open(_BUNDLE_JSON, encoding="utf-8") as _f:
         SKIN_CLASSES = json.load(_f)["classes"]
 elif os.path.isfile(_BUNDLE_PT_LEGACY) and os.path.isfile(_BUNDLE_JSON_LEGACY):
     MODEL_PATH = _BUNDLE_PT_LEGACY
-    _USE_CUSTOM = True
     with open(_BUNDLE_JSON_LEGACY, encoding="utf-8") as _f:
         SKIN_CLASSES = json.load(_f)["classes"]
 elif os.path.isfile(_LEGACY_TWOCLASS_PT):
     MODEL_PATH = _LEGACY_TWOCLASS_PT
-    _USE_CUSTOM = True
     SKIN_CLASSES = ["dry", "oily"]
 else:
-    MODEL_PATH = _LEGACY_PT
-    _USE_CUSTOM = False
-    SKIN_CLASSES = LEGACY_SKIN_CLASSES
+    MODEL_PATH = ""
+    SKIN_CLASSES = []
 
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
@@ -55,18 +43,11 @@ _transforms = None
 
 
 def get_transforms():
-    if _USE_CUSTOM:
-        return T.Compose(
-            [
-                T.Resize((224, 224)),
-                T.ToTensor(),
-                T.Normalize(IMAGENET_MEAN, IMAGENET_STD),
-            ]
-        )
     return T.Compose(
         [
-            T.Resize((512, 512)),
+            T.Resize((224, 224)),
             T.ToTensor(),
+            T.Normalize(IMAGENET_MEAN, IMAGENET_STD),
         ]
     )
 
@@ -117,8 +98,10 @@ def sunburn_degree_from_warmth(warmth: float) -> str:
 def load_model():
     global _model, _transforms
     if _model is None:
-        if not os.path.isfile(MODEL_PATH):
-            raise FileNotFoundError(f"Model not found at {MODEL_PATH}")
+        if not MODEL_PATH or not os.path.isfile(MODEL_PATH):
+            raise FileNotFoundError(
+                _MODEL_MISSING_MESSAGE if not MODEL_PATH else f"Model not found at {MODEL_PATH}"
+            )
         # Full pickled module; newer PyTorch defaults weights_only=True.
         try:
             _model = torch.load(
