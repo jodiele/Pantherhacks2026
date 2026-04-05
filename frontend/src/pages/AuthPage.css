@@ -1,0 +1,353 @@
+/* Scoped login/signup UI — converted from SCSS reference */
+.auth-page {
+  font-family: 'Nunito', sans-serif;
+  color: rgba(0, 0, 0, 0.7);
+  min-height: 100svh;
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
+  isolation: isolate;
+}
+
+.auth-page a {
+  color: inherit;
+}
+
+.auth-page .auth-back {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 5;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  opacity: 0.95;
+}
+
+.auth-page .auth-back:hover {
+  opacity: 1;
+}
+
+.auth-page .container {
+  min-height: 200vh;
+  background-image: url(https://images.unsplash.com/photo-1538137524007-21e48fa42f3f?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=ac9fa0975bd2ebad7afd906c5a3a15ab&auto=format&fit=crop&w=1834&q=80);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.auth-page .modal {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background: rgba(51, 51, 51, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: height 0.4s ease, background 0.4s ease;
+  z-index: 10;
+}
+
+.auth-page .modal-container {
+  display: flex;
+  max-width: 720px;
+  width: calc(100% - 2rem);
+  border-radius: 10px;
+  overflow: hidden;
+  position: fixed;
+  left: 50%;
+  bottom: 5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  background: #fff;
+  transform: translateX(-50%) translateY(100px) scale(0.4);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+  z-index: 11;
+}
+
+.auth-page .modal-title {
+  font-size: 26px;
+  margin: 0;
+  font-weight: 400;
+  color: #55311c;
+}
+
+.auth-page .modal-desc {
+  margin: 6px 0 30px 0;
+}
+
+.auth-page .modal-left {
+  padding: 60px 30px 20px;
+  background: #fff;
+  flex: 1.5;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+  transform: translateY(80px);
+  opacity: 0;
+}
+
+.auth-page .modal-button {
+  color: #7a665c;
+  font-family: 'Nunito', sans-serif;
+  font-size: 18px;
+  cursor: pointer;
+  border: 0;
+  padding: 10px 40px;
+  border-radius: 30px;
+  background: rgb(255, 255, 255);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.16);
+  transition:
+    opacity 0.3s ease,
+    background 0.3s ease;
+}
+
+.auth-page .modal-button:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.auth-page .modal-right {
+  flex: 2;
+  font-size: 0;
+  transition: 0.3s;
+  overflow: hidden;
+  min-height: 320px;
+}
+
+.auth-page .modal-right img {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  transform: scale(2);
+  object-fit: cover;
+  transition: transform 1.2s ease;
+}
+
+.auth-page .modal.is-open {
+  height: 100%;
+  top: 0;
+  background: rgba(51, 51, 51, 0.85);
+}
+
+.auth-page .modal.is-open .modal-button {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.auth-page .modal.is-open .modal-container {
+  opacity: 1;
+  transition-duration: 0.6s;
+  pointer-events: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.auth-page .modal.is-open .modal-right img {
+  transform: scale(1);
+}
+
+.auth-page .modal.is-open .modal-left {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.1s;
+}
+
+.auth-page .modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.auth-page .modal-buttons a {
+  color: rgba(51, 51, 51, 0.6);
+  font-size: 14px;
+}
+
+.auth-page .sign-up {
+  margin: 60px 0 0;
+  font-size: 14px;
+  text-align: center;
+}
+
+.auth-page .sign-up a {
+  color: #8c7569;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 0;
+}
+
+.auth-page .input-button {
+  padding: 8px 12px;
+  outline: none;
+  border: 0;
+  color: #fff;
+  border-radius: 4px;
+  background: #8c7569;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.auth-page .input-button:hover {
+  background: #55311c;
+}
+
+.auth-page .input-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.7px;
+  color: #8c7569;
+  transition: color 0.3s;
+}
+
+.auth-page .input-block {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 10px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  transition: border-color 0.3s;
+}
+
+.auth-page .input-block input {
+  outline: 0;
+  border: 0;
+  padding: 4px 0 0;
+  font-size: 14px;
+  font-family: 'Nunito', sans-serif;
+  color: #333;
+  width: 100%;
+}
+
+.auth-page .input-block input::placeholder {
+  color: #ccc;
+  opacity: 1;
+}
+
+.auth-page .input-block:focus-within {
+  border-color: #8c7569;
+}
+
+.auth-page .input-block:focus-within .input-label {
+  color: rgba(140, 117, 105, 0.8);
+}
+
+.auth-page .input-block--password {
+  position: relative;
+  padding-right: 44px;
+}
+
+.auth-page .icon-button {
+  outline: 0;
+  position: absolute;
+  right: 10px;
+  top: 1.85rem;
+  transform: none;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  color: #8c7569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.auth-page .icon-button:hover {
+  color: #55311c;
+}
+
+.auth-page .icon-button:focus-visible {
+  outline: 2px solid #8c7569;
+  outline-offset: 2px;
+}
+
+.auth-page .scroll-down {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #7a665c;
+  font-size: 32px;
+  font-weight: 800;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  text-shadow: 0 2px 16px rgba(255, 255, 255, 0.9);
+  z-index: 1;
+}
+
+.auth-page .scroll-down svg {
+  margin-top: 16px;
+  width: 52px;
+  fill: currentColor;
+}
+
+.auth-page .auth-error {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.65rem;
+  font-size: 13px;
+  color: #b91c1c;
+  background: rgba(254, 226, 226, 0.9);
+  border-radius: 4px;
+}
+
+@media (max-width: 750px) {
+  .auth-page .modal-container {
+    width: 90%;
+    max-width: 420px;
+    flex-direction: column;
+  }
+
+  .auth-page .modal-right {
+    display: none;
+  }
+
+  .auth-page .modal-left {
+    padding: 36px 22px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-page .modal,
+  .auth-page .modal-container,
+  .auth-page .modal-left,
+  .auth-page .modal-right img,
+  .auth-page .modal-button {
+    transition: none;
+  }
+
+  .auth-page .modal.is-open .modal-container {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .auth-page .modal-container {
+    transform: translateX(-50%) translateY(0) scale(0.98);
+  }
+}
