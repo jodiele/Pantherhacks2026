@@ -418,13 +418,8 @@ export function CoveragePage() {
     <div className="page">
       <section className="section section--page" aria-labelledby="coverage-heading">
         <h2 id="coverage-heading" className="section-title">
-          Sunscreen coverage map
+          Sunscreen Application Helper
         </h2>
-        <p className="section-lead">
-          The <strong>oval and grid stretch to your face outline</strong> (MediaPipe face contour) while
-          pose still follows nose and eyes. Fifteen sections inside the oval. Rub with your index finger
-          or tap. Turn off face tracking for a fixed template. Demo only.
-        </p>
 
         <div className="coverage-hand-toggle coverage-hand-toggle--wrap">
           <label className="coverage-toggle-label">

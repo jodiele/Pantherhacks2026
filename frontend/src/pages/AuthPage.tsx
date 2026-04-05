@@ -1,8 +1,9 @@
 import { type FormEvent, useEffect, useId, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { markFirstVisitComplete } from '@/lib/firstVisit'
 import HeroWave from '@/components/ui/dynamic-wave-canvas-background'
+import authSideIllustration from '@/assets/auth-side-illustration.png'
 import './AuthPage.css'
 
 export function AuthPage() {
@@ -18,7 +19,6 @@ export function AuthPage() {
     sendPasswordResetEmail,
   } = useAuth()
 
-  const [isOpen, setIsOpen] = useState(true)
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
@@ -38,18 +38,12 @@ export function AuthPage() {
   }, [])
 
   useEffect(() => {
-    if (!isOpen) return
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setIsOpen(false)
-    }
-    window.addEventListener('keydown', onKey)
     return () => {
       document.body.style.overflow = prev
-      window.removeEventListener('keydown', onKey)
     }
-  }, [isOpen])
+  }, [])
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -127,17 +121,7 @@ export function AuthPage() {
     <div className="auth-page">
       <HeroWave />
 
-      <Link className="auth-back" to="/">
-        ← Back to Suntology
-      </Link>
-
-      <div
-        className={`modal${isOpen ? ' is-open' : ''}`}
-        role="presentation"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) setIsOpen(false)
-        }}
-      >
+      <div className="modal is-open">
         <div
           id={dialogId}
           className="modal-container"
@@ -145,7 +129,6 @@ export function AuthPage() {
           aria-modal="true"
           aria-labelledby={titleId}
           aria-describedby={descId}
-          onClick={(e) => e.stopPropagation()}
         >
           <div className="modal-left">
             {user && !authLoading ? (
@@ -184,8 +167,8 @@ export function AuthPage() {
                 </h2>
                 <p className="modal-desc" id={descId}>
                   {mode === 'login'
-                    ? 'Welcome back — track UV, scans, and sun safety in one place.'
-                    : 'Join Suntology to save preferences and get personalized reminders.'}
+                    ? 'Welcome back!'
+                    : 'Join Suntology now to get started!'}
                 </p>
 
                 {!firebaseReady ? (
@@ -343,18 +326,17 @@ export function AuthPage() {
             )}
           </div>
 
-          <div className="modal-right" aria-hidden="true" />
+          <div className="modal-right" aria-hidden="true">
+            <img
+              src={authSideIllustration}
+              alt=""
+              className="modal-right-art"
+              width={512}
+              height={512}
+              decoding="async"
+            />
+          </div>
         </div>
-
-        <button
-          type="button"
-          className="modal-button"
-          onClick={() => setIsOpen(true)}
-          aria-expanded={isOpen}
-          aria-controls={dialogId}
-        >
-          Let me in
-        </button>
       </div>
     </div>
   )

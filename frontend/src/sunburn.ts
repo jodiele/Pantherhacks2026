@@ -179,16 +179,6 @@ export async function estimateWarmthSignal(file: File): Promise<number> {
   return n ? Math.min(1, (sum / n) * 2) : 0
 }
 
-export const SUNBURN_CARE = [
-  'Cool the skin with cool (not ice-cold) compresses or a cool shower.',
-  'Moisturize with gentle, fragrance-free lotion after skin cools.',
-  'Drink extra water; sunburn pulls fluid to the skin.',
-  'Avoid more sun on the area until healed.',
-]
-
-export const WHEN_TO_SEEK_CARE =
-  'Seek urgent care for severe blistering, fever, confusion, dehydration signs, or if a large area is affected—especially in children.'
-
 /** Severity for UI styling — not a clinical triage level */
 export type BurnAlertLevel = 'info' | 'caution' | 'warning'
 

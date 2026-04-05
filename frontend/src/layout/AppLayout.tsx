@@ -25,10 +25,6 @@ export function AppLayout() {
               <Outlet />
             </main>
           </div>
-
-          <footer className="foot">
-            UV: Open-Meteo · Image API: Flask + PyTorch · UI: Vite + React · Education only
-          </footer>
         </div>
       </div>
     </FirstVisitGate>

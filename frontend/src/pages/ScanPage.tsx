@@ -2,12 +2,8 @@ import { BurnAlertCard } from '../components/BurnAlertCard'
 import { ScanFollowUpChat } from '../components/ScanFollowUpChat'
 import { useSuntology } from '../context/SuntologyContext'
 import { formatLabel, topScores } from '../lib/format'
-import { moistureHintLabel, sunburnDegreeLabel } from '../lib/scanLabels'
-import {
-  SUNBURN_CARE,
-  WHEN_TO_SEEK_CARE,
-  warmthPhotoBurnNotice,
-} from '../sunburn'
+import { sunburnDegreeLabel } from '../lib/scanLabels'
+import { warmthPhotoBurnNotice } from '../sunburn'
 
 export function ScanPage() {
   const {
@@ -39,13 +35,8 @@ export function ScanPage() {
     <div className="page">
       <section className="section section--page" aria-labelledby="scan-heading">
         <h2 id="scan-heading" className="section-title">
-          Photo skin-type scan
+          Check your Skin
         </h2>
-        <p className="section-lead">
-          We analyze your photo for <strong>skin type</strong> — oil vs dry balance — and an
-          image-based <strong>UV exposure signal</strong> from tone. Results below are what this
-          scan measured for your skin.
-        </p>
 
         <div className="mode-tabs">
           <button
@@ -140,18 +131,6 @@ export function ScanPage() {
             {warmthBurnAlert && <BurnAlertCard alert={warmthBurnAlert} />}
 
             <div className="result-card summary-card">
-              <h2>Skin type — moisture profile</h2>
-              <p className="prediction-main">
-                {moistureHintLabel(result.moisture_hint)}
-              </p>
-              <p className="model-note">
-                Your <strong>skin type</strong> from this image is based on how strongly the
-                model reads <strong>oily</strong> vs <strong>dry</strong> patterns in your
-                photo. Balanced scores map to a combination / balanced type.
-              </p>
-            </div>
-
-            <div className="result-card summary-card">
               <h2>Skin readout — UV exposure signal</h2>
               <p className="prediction-main">
                 {sunburnDegreeLabel(result.sunburn_degree)}
@@ -172,12 +151,6 @@ export function ScanPage() {
               )}
             </div>
 
-            <ScanFollowUpChat
-              result={result}
-              warmthSignal={warmthSignal}
-              resetKey={`${previewUrl ?? ''}|${result.label}|${result.confidence}|${result.moisture_hint}|${result.sunburn_degree}`}
-            />
-
             <div className="result-card">
               <h2>Classifier detail</h2>
               <p className="prediction-main">{formatLabel(result.label)}</p>
@@ -185,8 +158,8 @@ export function ScanPage() {
                 Model confidence {Math.round(result.confidence * 1000) / 10}%
               </p>
               <p className="model-note">
-                Fine-grained label from the full classifier. Your primary skin-type readout is
-                the moisture and UV sections above.
+                Fine-grained label from the full classifier. The UV exposure signal section above
+                summarizes tone-based sun stress for this photo.
               </p>
               <ul className="score-list">
                 {scores.map(([name, val]) => (
@@ -203,15 +176,11 @@ export function ScanPage() {
               </ul>
             </div>
 
-            <div className="result-card care-card">
-              <h2>If skin feels burned</h2>
-              <ul className="tip-list">
-                {SUNBURN_CARE.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-              <p className="urgent-care">{WHEN_TO_SEEK_CARE}</p>
-            </div>
+            <ScanFollowUpChat
+              result={result}
+              warmthSignal={warmthSignal}
+              resetKey={`${previewUrl ?? ''}|${result.label}|${result.confidence}|${result.moisture_hint}|${result.sunburn_degree}`}
+            />
           </div>
         )}
       </section>
