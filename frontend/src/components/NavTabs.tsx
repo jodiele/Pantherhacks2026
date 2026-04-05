@@ -8,6 +8,7 @@ const tabs = [
   { to: '/learn', label: 'Learn', end: false },
   { to: '/about', label: 'About', end: false },
   { to: '/resources', label: 'Resources', end: false },
+  { to: '/auth', label: 'Sign in', end: false },
 ]
 
 export function NavTabs() {

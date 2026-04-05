@@ -8,6 +8,7 @@ import { ResourcesPage } from './pages/ResourcesPage'
 import { CoveragePage } from './pages/CoveragePage'
 import { ScanPage } from './pages/ScanPage'
 import { UvPage } from './pages/UvPage'
+import { AuthPage } from './pages/AuthPage'
 import './App.css'
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
     <BrowserRouter>
       <SuntologyProvider>
         <Routes>
+          <Route path="/auth" element={<AuthPage />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/uv" element={<UvPage />} />
