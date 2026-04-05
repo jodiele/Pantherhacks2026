@@ -7,8 +7,10 @@ import torchvision.transforms as T
 from PIL import Image
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-_BUNDLE_PT = os.path.join(BASE_DIR, "suncheck-model.pt")
-_BUNDLE_JSON = os.path.join(BASE_DIR, "suncheck-classes.json")
+_BUNDLE_PT = os.path.join(BASE_DIR, "suntology-model.pt")
+_BUNDLE_JSON = os.path.join(BASE_DIR, "suntology-classes.json")
+_BUNDLE_PT_LEGACY = os.path.join(BASE_DIR, "suncheck-model.pt")
+_BUNDLE_JSON_LEGACY = os.path.join(BASE_DIR, "suncheck-classes.json")
 _LEGACY_TWOCLASS_PT = os.path.join(BASE_DIR, "suncheck-dry-oily.pt")
 _LEGACY_PT = os.path.join(BASE_DIR, "skin-model-pokemon.pt")
 
@@ -24,11 +26,16 @@ LEGACY_SKIN_CLASSES = [
     "warts",
 ]
 
-# Custom fine-tuned ResNet18: 224px + ImageNet norm. Prefer model + classes json from train.py.
+# Custom fine-tuned ResNet18: 224px + ImageNet norm. Prefer suntology bundle, then legacy suncheck names.
 if os.path.isfile(_BUNDLE_PT) and os.path.isfile(_BUNDLE_JSON):
     MODEL_PATH = _BUNDLE_PT
     _USE_CUSTOM = True
     with open(_BUNDLE_JSON, encoding="utf-8") as _f:
+        SKIN_CLASSES = json.load(_f)["classes"]
+elif os.path.isfile(_BUNDLE_PT_LEGACY) and os.path.isfile(_BUNDLE_JSON_LEGACY):
+    MODEL_PATH = _BUNDLE_PT_LEGACY
+    _USE_CUSTOM = True
+    with open(_BUNDLE_JSON_LEGACY, encoding="utf-8") as _f:
         SKIN_CLASSES = json.load(_f)["classes"]
 elif os.path.isfile(_LEGACY_TWOCLASS_PT):
     MODEL_PATH = _LEGACY_TWOCLASS_PT

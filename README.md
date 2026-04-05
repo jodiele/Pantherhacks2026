@@ -1,4 +1,4 @@
-# SunCheck · PantherHacks 2026
+# Suntology · PantherHacks 2026
 
 Sun safety companion: **live UV index**, **burn alerts**, optional **photo scan** (demo ML + warmth heuristic), **sun exposure** education, and **skin cancer awareness** links. **Not medical advice.**
 
@@ -42,7 +42,7 @@ Legacy notebooks, duplicate static sites, and old image folders were removed. Wh
 | `run.py` | Start the API server |
 | `skin-model-pokemon.pt` | PyTorch weights for `/api/predict` |
 | `requirements.txt` | Python dependencies |
-| `frontend/` | Vite + React UI (SunCheck) |
+| `frontend/` | Vite + React UI (Suntology) |
 
 Everything else you see locally (`node_modules/`, `.venv/`) is installed by npm/pip and is gitignored.
 
@@ -55,7 +55,7 @@ source .venv/bin/activate
 python training/train.py --epochs 15
 ```
 
-This writes `suncheck-model.pt` and `suncheck-classes.json`. If both exist, the API uses them (224×224 + ImageNet normalization). Older setups may still use `suncheck-dry-oily.pt` alone (two classes: dry, oily). Otherwise the app falls back to the legacy 9-class checkpoint. Restart Flask after training.
+This writes `suntology-model.pt` and `suntology-classes.json`. If those are missing, the API still accepts the legacy names `suncheck-model.pt` and `suncheck-classes.json`. Older setups may use `suncheck-dry-oily.pt` alone (two classes: dry, oily). Otherwise the app falls back to the legacy 9-class checkpoint. Restart Flask after training.
 
 ## Credits
 

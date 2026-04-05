@@ -1,5 +1,5 @@
 import { BurnAlertCard } from '../components/BurnAlertCard'
-import { useSunCheck } from '../context/SunCheckContext'
+import { useSuntology } from '../context/SuntologyContext'
 import { formatLabel, topScores } from '../lib/format'
 import { moistureHintLabel, sunburnDegreeLabel } from '../lib/scanLabels'
 import {
@@ -26,7 +26,7 @@ export function ScanPage() {
     capturePhoto,
     onFileChange,
     analyzeUpload,
-  } = useSunCheck()
+  } = useSuntology()
 
   const scores = result?.scores ? topScores(result.scores) : []
   const warmthBurnAlert =

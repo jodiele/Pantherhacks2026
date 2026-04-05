@@ -1,5 +1,5 @@
 import { BurnAlertCard } from '../components/BurnAlertCard'
-import { useSunCheck } from '../context/SunCheckContext'
+import { useSuntology } from '../context/SuntologyContext'
 import { burnAlertsForUv, uvGuidance } from '../sunburn'
 
 export function UvPage() {
@@ -15,7 +15,7 @@ export function UvPage() {
     setManualState,
     refreshUvFromLocation,
     applyCityStatePlace,
-  } = useSunCheck()
+  } = useSuntology()
 
   const uvTips = uvIndex !== null ? uvGuidance(uvIndex) : null
   const liveBurnAlerts = uvIndex !== null ? burnAlertsForUv(uvIndex) : []

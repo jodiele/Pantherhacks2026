@@ -19,7 +19,7 @@ import {
   fetchCurrentUv,
 } from '../sunburn'
 
-type SunCheckContextValue = {
+type SuntologyContextValue = {
   mode: 'camera' | 'upload'
   setMode: (m: 'camera' | 'upload') => void
   videoRef: RefObject<HTMLVideoElement | null>
@@ -50,9 +50,9 @@ type SunCheckContextValue = {
   analyzeUpload: () => Promise<void>
 }
 
-const SunCheckContext = createContext<SunCheckContextValue | null>(null)
+const SuntologyContext = createContext<SuntologyContextValue | null>(null)
 
-export function SunCheckProvider({ children }: { children: ReactNode }) {
+export function SuntologyProvider({ children }: { children: ReactNode }) {
   const { pathname } = useLocation()
   const onScanPage = pathname === '/scan'
 
@@ -272,7 +272,7 @@ export function SunCheckProvider({ children }: { children: ReactNode }) {
     }
   }, [previewUrl])
 
-  const value = useMemo<SunCheckContextValue>(
+  const value = useMemo<SuntologyContextValue>(
     () => ({
       mode,
       setMode,
@@ -329,14 +329,14 @@ export function SunCheckProvider({ children }: { children: ReactNode }) {
   )
 
   return (
-    <SunCheckContext.Provider value={value}>{children}</SunCheckContext.Provider>
+    <SuntologyContext.Provider value={value}>{children}</SuntologyContext.Provider>
   )
 }
 
-export function useSunCheck() {
-  const ctx = useContext(SunCheckContext)
+export function useSuntology() {
+  const ctx = useContext(SuntologyContext)
   if (!ctx) {
-    throw new Error('useSunCheck must be used within SunCheckProvider')
+    throw new Error('useSuntology must be used within SuntologyProvider')
   }
   return ctx
 }
