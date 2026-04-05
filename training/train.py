@@ -9,7 +9,7 @@ Usage (from repo root):
   source .venv/bin/activate
   python training/train.py --epochs 15
 
-Output: suncheck-model.pt and suncheck-classes.json in repo root (see app/inference.py).
+Output: suntology-model.pt and suntology-classes.json in repo root (see app/inference.py).
 """
 from __future__ import annotations
 
@@ -26,8 +26,8 @@ from torchvision import datasets, models, transforms
 # Repo root (parent of training/)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_DATA = os.path.join(ROOT, "data")
-DEFAULT_OUT = os.path.join(ROOT, "suncheck-model.pt")
-DEFAULT_CLASSES_JSON = os.path.join(ROOT, "suncheck-classes.json")
+DEFAULT_OUT = os.path.join(ROOT, "suntology-model.pt")
+DEFAULT_CLASSES_JSON = os.path.join(ROOT, "suntology-classes.json")
 
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)

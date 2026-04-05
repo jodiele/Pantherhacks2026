@@ -5,15 +5,15 @@ export function AppLayout() {
   return (
     <div className="app">
       <div className="disclaimer">
-        <strong>Not medical advice.</strong> SunCheck shares UV-based burn alerts, informal
+        <strong>Not medical advice.</strong> Suntology shares UV-based burn alerts, informal
         photo hints, and cancer-risk education for awareness only. It does not diagnose
         sunburn, skin cancer, or any disease—see a qualified clinician for evaluation.
       </div>
 
       <div className="shell shell--with-nav">
         <header className="brand brand--compact">
-          <p className="tagline">PantherHacks · SunCheck</p>
-          <h1>SunCheck</h1>
+          <p className="tagline">PantherHacks · Suntology</p>
+          <h1>Suntology</h1>
         </header>
 
         <NavTabs />

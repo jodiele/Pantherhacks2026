@@ -4,9 +4,9 @@ export function AboutPage() {
   return (
     <div className="page filler-page">
       <section className="section section--page">
-        <h2 className="section-title">About SunCheck</h2>
+        <h2 className="section-title">About Suntology</h2>
         <p className="section-lead">
-          SunCheck is a <strong>PantherHacks 2026</strong> project: a small full-stack demo
+          Suntology is a <strong>PantherHacks 2026</strong> project: a small full-stack demo
           that combines public weather UV data, a Flask + PyTorch image API, and React
           education screens—not a regulated medical device.
         </p>

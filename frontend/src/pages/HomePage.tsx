@@ -1,35 +1,38 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fetchTodayWeatherOverview, isWeatherApiConfigured } from '../api/weather'
-import { useSunCheck } from '../context/SunCheckContext'
+import { useSuntology } from '../context/SuntologyContext'
+import { buildTodayVibe } from '../lib/homeHeroCopy'
+import { UvHourlyChart } from '../components/UvHourlyChart'
 import { fetchTodayUvPlan, type TodayUvPlan, uvGuidance } from '../sunburn'
 
-const featureCards = [
+const heroTips = [
   {
-    to: '/uv',
-    title: 'UV & burn alerts',
-    text: 'Live index, location or city/state, and burn-risk messaging.',
+    id: 'why-peak',
+    label: 'Why peak UV matters',
+    detail:
+      'Skin stress adds up over years. The strongest hours are when unprotected burns and DNA damage happen fastest—timing shade and SPF around the peak is free leverage.',
   },
   {
-    to: '/scan',
-    title: 'Photo scan',
-    text: 'Webcam or upload—demo model + informal warmth signal.',
+    id: 'habits',
+    label: 'Habits beat perfect forecasts',
+    detail:
+      'You don’t need exact numbers to win—hat, sleeves, sunscreen, and breaks in shade all lower your dose, even on “medium” UV days.',
   },
   {
-    to: '/learn',
-    title: 'Sun exposure & cancer awareness',
-    text: 'How UV adds up and why protection matters long-term.',
+    id: 'not-medical',
+    label: 'This isn’t medical advice',
+    detail:
+      'We use public UV and weather data for planning vibes only. See a clinician for personal risk, medications, and skin checks.',
   },
-] as const
-
-const planIdeas = [
-  { id: 'midday', label: 'Avoid peak UV window', hint: 'Schedule shade or indoor breaks around your peak hour.' },
-  { id: 'spf', label: 'SPF + reapply', hint: 'Every ~2h outside; more if swimming or sweating.' },
-  { id: 'layers', label: 'Hat & sleeves', hint: 'Clothing beats forgetting to reapply sunscreen.' },
 ] as const
 
 export function HomePage() {
-  const { uvCoords, uvPlaceLabel } = useSunCheck()
+  const { uvCoords, uvPlaceLabel } = useSuntology()
+
+  const [expandedHeroTip, setExpandedHeroTip] = useState<string | null>(null)
+  const [planAnimSeq, setPlanAnimSeq] = useState(0)
+  const wasPlanLoading = useRef(false)
 
   const [planOpen, setPlanOpen] = useState(false)
   const [planLoading, setPlanLoading] = useState(false)
@@ -38,7 +41,12 @@ export function HomePage() {
   const [weatherOverview, setWeatherOverview] = useState<Awaited<
     ReturnType<typeof fetchTodayWeatherOverview>
   >>(null)
-  const [pickedIdeas, setPickedIdeas] = useState<Set<string>>(() => new Set())
+  useLayoutEffect(() => {
+    if (planOpen && wasPlanLoading.current && !planLoading) {
+      setPlanAnimSeq((n) => n + 1)
+    }
+    wasPlanLoading.current = planLoading
+  }, [planOpen, planLoading])
 
   const runPlanForCoords = useCallback(async (lat: number, lon: number) => {
     setPlanLoading(true)
@@ -94,21 +102,7 @@ export function HomePage() {
     void runPlanForCoords(uvCoords.lat, uvCoords.lon)
   }, [uvCoords, runPlanForCoords])
 
-  const toggleIdea = (id: string) => {
-    setPickedIdeas((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }
-
   const peakTips = plan?.peak ? uvGuidance(plan.peak.uv) : null
-
-  const stripPoints =
-    plan && plan.restOfDay.length > 0
-      ? plan.restOfDay
-      : plan?.hourly.slice(-12) ?? []
 
   return (
     <div className="page home-page">
@@ -117,9 +111,44 @@ export function HomePage() {
           Plan around the sun
         </h2>
         <p className="home-hero-sub">
-          See when <strong>UV peaks today</strong>, skim the rest of the day, and stack habits—not
-          medical advice, just smarter timing.
+          See when <strong>UV peaks today</strong>, view the full-day curve with a &ldquo;now&rdquo;
+          marker, and check local weather—not medical advice, just smarter timing.
         </p>
+        <ul className="home-hero-tips" aria-label="Quick tips—tap to expand">
+          {heroTips.map((tip) => {
+            const open = expandedHeroTip === tip.id
+            return (
+              <li key={tip.id} className="home-hero-tip-item">
+                <button
+                  type="button"
+                  className={`home-hero-tip-btn ${open ? 'is-open' : ''}`}
+                  aria-expanded={open}
+                  aria-controls={`home-tip-${tip.id}`}
+                  id={`home-tip-trigger-${tip.id}`}
+                  onClick={() =>
+                    setExpandedHeroTip((cur) => (cur === tip.id ? null : tip.id))
+                  }
+                >
+                  <span className="home-hero-tip-chevron" aria-hidden>
+                    {open ? '▼' : '▶'}
+                  </span>
+                  {tip.label}
+                </button>
+                <div
+                  id={`home-tip-${tip.id}`}
+                  role="region"
+                  aria-labelledby={`home-tip-trigger-${tip.id}`}
+                  aria-hidden={!open}
+                  className={`home-hero-tip-panel ${open ? 'is-open' : ''}`}
+                >
+                  <div className="home-hero-tip-panel-inner">
+                    <p className="home-hero-tip-detail">{tip.detail}</p>
+                  </div>
+                </div>
+              </li>
+            )
+          })}
+        </ul>
         <div className="home-hero-actions">
           <button
             type="button"
@@ -175,21 +204,28 @@ export function HomePage() {
                 </p>
               </div>
 
-              <div className="home-strip-wrap">
-                <p className="home-strip-label">Rest of today (hourly)</p>
-                <ul className="home-uv-strip" aria-label="UV index by hour for the rest of today">
-                  {stripPoints.slice(0, 14).map((p) => (
-                    <li key={p.at.toISOString()} className="home-uv-chip">
-                      <span className="home-uv-chip-time">{p.label}</span>
-                      <span className="home-uv-chip-val">{p.uv.toFixed(0)}</span>
-                    </li>
-                  ))}
-                </ul>
+              <p className="home-vibe" aria-live="polite">
+                {buildTodayVibe(
+                  plan.peak.uv,
+                  plan.peak.label,
+                  weatherOverview?.conditionText ?? null,
+                )}
+              </p>
+
+              <div
+                key={`strip-${planAnimSeq}`}
+                className="home-strip-wrap home-animate-in"
+              >
+                <p className="home-strip-label">Today&apos;s UV (full day)</p>
+                <UvHourlyChart points={plan.hourly} nowAt={new Date()} />
               </div>
             </>
           )}
 
-          <div className="home-weather-card">
+          <div
+            key={`wx-${planAnimSeq}`}
+            className={`home-weather-card${planAnimSeq > 0 ? ' home-animate-in home-animate-in--delay' : ''}`}
+          >
             <p className="home-weather-title">Weather</p>
             {isWeatherApiConfigured() && weatherOverview ? (
               <div className="home-weather-split">
@@ -248,29 +284,11 @@ export function HomePage() {
             )}
           </div>
 
-          <div className="home-checklist">
-            <p className="home-checklist-title">Tap what you&apos;re committing to today</p>
-            <ul className="home-checklist-items">
-              {planIdeas.map((idea) => (
-                <li key={idea.id}>
-                  <button
-                    type="button"
-                    className={`home-check-item ${pickedIdeas.has(idea.id) ? 'is-on' : ''}`}
-                    onClick={() => toggleIdea(idea.id)}
-                    aria-pressed={pickedIdeas.has(idea.id)}
-                  >
-                    <span className="home-check-bubble" aria-hidden>
-                      {pickedIdeas.has(idea.id) ? '✓' : ''}
-                    </span>
-                    <span className="home-check-text">
-                      <strong>{idea.label}</strong>
-                      <span className="home-check-hint">{idea.hint}</span>
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <p className="home-plan-foot">
+            Want live burn-risk copy for your location? Use{' '}
+            <Link to="/uv">UV &amp; alerts</Link>. For how UV adds up over a lifetime, see{' '}
+            <Link to="/learn">Sun &amp; skin basics</Link>.
+          </p>
 
           <button
             type="button"
@@ -281,29 +299,6 @@ export function HomePage() {
           </button>
         </section>
       )}
-
-      <p className="home-lead">
-        Live <strong>UV index</strong> and <strong>burn alerts</strong>, optional{' '}
-        <strong>photo processing</strong>, and <strong>education</strong> on sun exposure
-        and skin cancer risk—built for safer habits, not to replace medical care.
-      </p>
-
-      <ul className="home-cards">
-        {featureCards.map((c) => (
-          <li key={c.to}>
-            <Link to={c.to} className="home-card">
-              <span className="home-card-title">{c.title}</span>
-              <span className="home-card-text">{c.text}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      <p className="home-hint">
-        Use the tabs above anytime. Load UV on the{' '}
-        <Link to="/uv">UV</Link> tab to sync burn alerts; your last place can power{' '}
-        <strong>Plan with saved spot</strong> here.
-      </p>
     </div>
   )
 }
