@@ -13,12 +13,6 @@ const planHeroTips = [
     detail:
       'Skin stress adds up over years. The strongest hours are when unprotected burns and DNA damage happen fastest—timing shade and SPF around the peak is free leverage.',
   },
-  {
-    id: 'habits',
-    label: 'Habits beat perfect forecasts',
-    detail:
-      'You don’t need exact numbers to win—hat, sleeves, sunscreen, and breaks in shade all lower your dose, even on “medium” UV days.',
-  },
 ] as const
 
 export function DayPlanSection() {
@@ -98,7 +92,7 @@ export function DayPlanSection() {
     >
       <div className="home-hero uv-plan-hero">
         <h2 id="uv-plan-around-title" className="home-hero-title">
-          Plan around the sun
+          Pla Around the Sun
         </h2>
         <p className="home-hero-sub">
           See when <strong>UV peaks today</strong>, view the full-day curve with a &ldquo;now&rdquo;

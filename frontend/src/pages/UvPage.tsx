@@ -23,23 +23,8 @@ export function UvPage() {
     <div className="page">
       <section className="section section--page" aria-labelledby="uv-heading">
         <h2 id="uv-heading" className="section-title">
-          UV index near you
+          UV Index Near You
         </h2>
-        <p className="section-lead">
-          Live estimate from{' '}
-          <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">
-            Open-Meteo
-          </a>
-          . Places are looked up with{' '}
-          <a
-            href="https://open-meteo.com/en/docs/geocoding-api"
-            target="_blank"
-            rel="noreferrer"
-          >
-            their geocoder
-          </a>
-          . Refresh when you change location.
-        </p>
 
         <div className="panel uv-panel">
           <div className="uv-actions">

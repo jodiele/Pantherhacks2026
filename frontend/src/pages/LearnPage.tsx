@@ -11,12 +11,8 @@ export function LearnPage() {
     <div className="page">
       <section className="section section--page" aria-labelledby="exposure-heading">
         <h2 id="exposure-heading" className="section-title">
-          Sun exposure
+          Sun Exposure Awareness
         </h2>
-        <p className="section-lead">
-          Short sessions add up. Thinking in <strong>doses</strong> of UV—not just “did I burn
-          today?”—helps protect skin over years.
-        </p>
         <div className="panel education-panel">
           <ul className="education-list">
             {SUN_EXPOSURE_POINTS.map((item) => (
@@ -31,12 +27,8 @@ export function LearnPage() {
 
       <section className="section section--page" aria-labelledby="cancer-heading">
         <h2 id="cancer-heading" className="section-title">
-          UV, sunburn, and skin cancer awareness
+          Sunburns and Skin Cancer
         </h2>
-        <p className="section-lead">
-          Most skin cancers are linked to UV damage. Sunburns are a clear warning sign, but{' '}
-          <strong>cumulative exposure</strong> matters even without a painful burn.
-        </p>
         <div className="panel awareness-panel">
           <p className="awareness-intro">{CANCER_AWARENESS_INTRO}</p>
           <ul className="tip-list awareness-bullets">
@@ -64,10 +56,6 @@ export function LearnPage() {
         <h2 id="learn-chat-heading" className="section-title">
           Questions?
         </h2>
-        <p className="section-lead">
-          Chat below about sun safety, SPF, or what you read on this page — same assistant as after a photo
-          scan, tuned for general education here.
-        </p>
         <LearnPageChat />
       </section>
     </div>

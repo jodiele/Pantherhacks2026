@@ -13,26 +13,6 @@
   color: inherit;
 }
 
-.auth-page .auth-back {
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  z-index: 5;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--accent);
-  text-decoration: none;
-  text-shadow:
-    0 0 12px rgba(15, 20, 18, 0.9),
-    0 1px 2px rgba(0, 0, 0, 0.5);
-  opacity: 0.95;
-}
-
-.auth-page .auth-back:hover {
-  opacity: 1;
-  color: var(--heading);
-}
-
 .auth-page .modal {
   position: fixed;
   left: 0;
@@ -103,60 +83,39 @@
   opacity: 0;
 }
 
-.auth-page .modal-button {
-  color: var(--heading);
-  font-family: var(--font);
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid rgba(94, 234, 212, 0.35);
-  padding: 10px 40px;
-  border-radius: 999px;
-  background: rgba(15, 20, 18, 0.65);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  box-shadow:
-    0 0 24px rgba(45, 212, 191, 0.12),
-    0 8px 32px rgba(0, 0, 0, 0.35);
-  transition:
-    opacity 0.3s ease,
-    background 0.3s ease,
-    border-color 0.3s ease;
-}
-
-.auth-page .modal-button:hover {
-  background: rgba(30, 38, 34, 0.85);
-  border-color: rgba(94, 234, 212, 0.55);
-}
-
 .auth-page .modal-right {
   flex: 2;
   min-height: 320px;
+  min-width: 0;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1rem;
   transition:
     opacity 0.5s ease,
     transform 0.9s ease;
-  background:
-    linear-gradient(
-      160deg,
-      rgba(45, 212, 191, 0.35) 0%,
-      rgba(15, 20, 18, 0.2) 42%,
-      rgba(251, 191, 36, 0.18) 100%
-    );
-  border-left: 1px solid rgba(94, 234, 212, 0.18);
+  background-color: #9ec0e0;
+  border-left: 1px solid rgba(94, 234, 212, 0.22);
   opacity: 0.65;
   transform: scale(1.06);
+}
+
+.auth-page .modal-right-art {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+  user-select: none;
 }
 
 .auth-page .modal.is-open {
   height: 100%;
   top: 0;
   background: rgba(15, 20, 18, 0.88);
-}
-
-.auth-page .modal.is-open .modal-button {
-  opacity: 0;
-  pointer-events: none;
 }
 
 .auth-page .modal.is-open .modal-container {
@@ -460,8 +419,7 @@
   .auth-page .modal,
   .auth-page .modal-container,
   .auth-page .modal-left,
-  .auth-page .modal-right,
-  .auth-page .modal-button {
+  .auth-page .modal-right {
     transition: none;
   }
 

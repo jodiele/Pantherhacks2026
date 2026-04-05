@@ -66,7 +66,8 @@ export function Hero() {
             <Button size="lg" className="gap-2" variant="outline" asChild>
               <Link to="/learn">
                 <BookOpen className="size-4" aria-hidden />
-                Sun safety tips
+                Learn More
+                
               </Link>
             </Button>
             <Button

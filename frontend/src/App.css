@@ -851,11 +851,6 @@ button.nav-tab {
   font-weight: 500;
 }
 
-.filler-note {
-  border-style: dashed;
-  opacity: 0.95;
-}
-
 header.brand {
   margin-bottom: 2rem;
 }
@@ -896,29 +891,8 @@ header.brand .tagline {
   font-weight: 400;
   letter-spacing: -0.02em;
   color: var(--heading);
-  margin: 0 0 0.5rem;
-  line-height: 1.2;
-}
-
-.section-lead {
   margin: 0 0 1rem;
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.93);
-  max-width: 52ch;
-  line-height: 1.55;
-}
-
-.section-lead a {
-  color: var(--mint-emphasis);
-  font-weight: 600;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-  text-shadow: var(--mint-glow);
-}
-
-.section-lead a:hover {
-  color: #cffcea;
+  line-height: 1.2;
 }
 
 .sr-only {
@@ -1257,13 +1231,6 @@ header.brand .tagline {
   font-size: 0.8125rem;
   color: var(--text-muted);
   margin: 0 0 1rem;
-  line-height: 1.45;
-}
-
-.care-card .urgent-care {
-  margin: 1rem 0 0;
-  font-size: 0.8125rem;
-  color: var(--warning);
   line-height: 1.45;
 }
 
@@ -1635,18 +1602,6 @@ header.brand .tagline {
 
 .resource-links a {
   font-size: 0.875rem;
-}
-
-footer.foot {
-  margin-top: auto;
-  padding: 1.5rem 1.25rem;
-  text-align: center;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.65);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(8, 12, 10, 0.75);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
 }
 
 /* —— Sunscreen coverage map —— */
