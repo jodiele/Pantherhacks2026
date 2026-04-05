@@ -83,12 +83,46 @@
   padding-top: 2rem;
 }
 
+/* Home: no frosted card—content sits on the wave */
+.shell.shell--home-bleed {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-width: none;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  padding-left: clamp(0.75rem, 4vw, 2.5rem);
+  padding-right: clamp(0.75rem, 4vw, 2.5rem);
+}
+
+.shell.shell--home-bleed .page-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
 @media (max-width: 640px) {
   .shell {
     margin-left: 0.65rem;
     margin-right: 0.65rem;
     width: auto;
     max-width: calc(100% - 1.3rem);
+  }
+
+  .shell.shell--home-bleed {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
+    width: 100%;
   }
 }
 
@@ -147,21 +181,6 @@ button.nav-tab {
   min-height: 40vh;
 }
 
-.page {
-  animation: page-in 0.2s ease;
-}
-
-@keyframes page-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .section--page {
   margin-bottom: 2rem;
 }
@@ -174,13 +193,9 @@ button.nav-tab {
   margin-bottom: 2rem;
   padding: 1.35rem 1.25rem 1.5rem;
   border-radius: var(--radius);
+  /* Same teal → black wash as `.app .panel` (UV index box above) */
   background:
-    linear-gradient(
-      145deg,
-      rgba(94, 234, 212, 0.14),
-      rgba(251, 191, 36, 0.09)
-    ),
-    linear-gradient(160deg, rgba(94, 234, 212, 0.08) 0%, transparent 46%),
+    linear-gradient(160deg, rgba(94, 234, 212, 0.1) 0%, transparent 46%),
     rgba(10, 14, 12, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow:
@@ -394,10 +409,6 @@ button.nav-tab {
   margin-bottom: 1.15rem;
 }
 
-.uv-plan-hero-alt {
-  margin: 0.85rem 0 0;
-}
-
 .uv-plan-location-notice {
   margin: 0 0 0.85rem;
   max-width: 52ch;
@@ -514,10 +525,11 @@ button.nav-tab {
 }
 
 .home-uv-chart {
+  position: relative;
   width: 100%;
   border-radius: 12px;
   padding: 0.75rem 0.65rem 0.5rem;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .home-uv-chart-svg {
@@ -562,6 +574,44 @@ button.nav-tab {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   pointer-events: none;
+}
+
+.home-uv-chart-dot-hit {
+  cursor: default;
+}
+
+.home-uv-chart-tooltip {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  padding: 0.4rem 0.55rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--heading);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+  max-width: min(220px, calc(100vw - 24px));
+  transform: translate(14px, -50%);
+}
+
+.home-uv-chart-tooltip-uv {
+  font-variant-numeric: tabular-nums;
+}
+
+.home-uv-chart-tooltip-suffix {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.home-uv-chart-tooltip-time {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
 .home-uv-chart-dot {

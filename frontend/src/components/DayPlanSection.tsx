@@ -70,31 +70,6 @@ export function DayPlanSection() {
     }
   }, [])
 
-  const planWithGeolocation = useCallback(() => {
-    if (!navigator.geolocation) {
-      setPlanError('Geolocation is not available in this browser.')
-      return
-    }
-    setLocationNotice(false)
-    setPlanOpen(true)
-    setPlanLoading(true)
-    setPlanError(null)
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        void runPlanForCoords(pos.coords.latitude, pos.coords.longitude)
-      },
-      (err) => {
-        setPlanLoading(false)
-        setPlanError(
-          err.code === 1
-            ? 'Location denied. Set city and state above, then try again.'
-            : 'Could not read your location.',
-        )
-      },
-      { enableHighAccuracy: false, timeout: 12_000, maximumAge: 300_000 },
-    )
-  }, [runPlanForCoords])
-
   const planWithSavedCoords = useCallback(() => {
     if (!uvCoords) return
     setPlanOpen(true)
@@ -177,16 +152,6 @@ export function DayPlanSection() {
             Sun &amp; skin basics
           </Link>
         </div>
-        <p className="uv-plan-hero-alt">
-          <button
-            type="button"
-            className="btn btn-ghost home-hero-secondary"
-            onClick={() => planWithGeolocation()}
-            disabled={planLoading}
-          >
-            Use my current position
-          </button>
-        </p>
       </div>
 
       {uvCoords ? (

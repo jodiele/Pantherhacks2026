@@ -5,9 +5,9 @@ import { useAuth } from '@/context/AuthContext'
 
 const navLinksData = [
   { label: 'Home', to: '/', end: true as const },
-  { label: 'UV & alerts', to: '/uv', end: false as const },
-  { label: 'Photo scan', to: '/scan', end: false as const },
-  { label: 'Coverage map', to: '/coverage', end: false as const },
+  { label: 'UV Planner', to: '/uv', end: false as const },
+  { label: 'Skin Scanner', to: '/scan', end: false as const },
+  { label: 'Coverage Map', to: '/coverage', end: false as const },
   { label: 'Learn', to: '/learn', end: false as const },
   { label: 'About', to: '/about', end: false as const },
   { label: 'Resources', to: '/resources', end: false as const },
@@ -141,9 +141,9 @@ export function MiniNavbar() {
 
   return (
     <header
-      className={`fixed left-1/2 top-6 z-30 flex w-[calc(100%-2rem)] -translate-x-1/2 transform flex-col items-center border border-[#333] bg-[#1f1f1f57] py-3 pl-6 pr-6 backdrop-blur-sm transition-[border-radius] duration-0 ease-in-out md:w-auto ${headerShapeClass}`}
+      className={`fixed left-1/2 top-6 z-30 flex w-[min(960px,calc(100vw-1.3rem))] max-w-[960px] -translate-x-1/2 transform flex-col items-stretch border border-[#333] bg-[#1f1f1f57] py-3 pl-6 pr-6 backdrop-blur-sm transition-[border-radius] duration-0 ease-in-out sm:w-[min(960px,100vw)] ${headerShapeClass}`}
     >
-      <div className="flex w-full flex-wrap items-center justify-between gap-x-3 gap-y-2 md:flex-nowrap md:gap-x-5 lg:gap-x-8">
+      <div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 md:flex-nowrap md:gap-x-5 lg:gap-x-8">
         <div className="flex min-w-0 shrink-0 items-center">{logoElement}</div>
 
         <nav

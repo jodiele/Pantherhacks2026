@@ -1,4 +1,4 @@
-import { useId, useMemo } from 'react'
+import { useCallback, useId, useMemo, useRef, useState } from 'react'
 import type { UvHourlyPoint } from '../sunburn'
 
 type Props = {
@@ -16,8 +16,38 @@ const PAD_R = 28
 const PAD_T = 28
 const PAD_B = 52
 
+function svgPointToChartOffset(
+  svg: SVGSVGElement,
+  chart: HTMLDivElement,
+  vx: number,
+  vy: number,
+): { left: number; top: number } {
+  const ctm = svg.getScreenCTM()
+  if (!ctm) return { left: 0, top: 0 }
+  const sp = new DOMPoint(vx, vy).matrixTransform(ctm)
+  const cr = chart.getBoundingClientRect()
+  return { left: sp.x - cr.left, top: sp.y - cr.top }
+}
+
+type DotTip = { left: number; top: number; uv: number; label: string }
+
 export function UvHourlyChart({ points, maxPoints, nowAt }: Props) {
   const gradId = useId().replace(/:/g, '')
+  const chartRef = useRef<HTMLDivElement>(null)
+  const svgRef = useRef<SVGSVGElement>(null)
+  const [dotTip, setDotTip] = useState<DotTip | null>(null)
+
+  const placeDotTip = useCallback(
+    (d: { cx: number; cy: number; uv: number; label: string }) => {
+      const chart = chartRef.current
+      const svg = svgRef.current
+      if (!chart || !svg) return
+      const { left, top } = svgPointToChartOffset(svg, chart, d.cx, d.cy)
+      setDotTip({ left, top, uv: d.uv, label: d.label })
+    },
+    [],
+  )
+  const hideDotTip = useCallback(() => setDotTip(null), [])
 
   const { data, linePath, areaPath, dots, xLabels, yTicks, nowLineX } = useMemo(() => {
     const data =
@@ -128,8 +158,9 @@ export function UvHourlyChart({ points, maxPoints, nowAt }: Props) {
     .join('; ')
 
   return (
-    <div className="home-uv-chart">
+    <div className="home-uv-chart" ref={chartRef}>
       <svg
+        ref={svgRef}
         className="home-uv-chart-svg"
         viewBox={`0 0 ${VB_W} ${VB_H}`}
         preserveAspectRatio="xMidYMid meet"
@@ -168,14 +199,25 @@ export function UvHourlyChart({ points, maxPoints, nowAt }: Props) {
         <path d={linePath} className="home-uv-chart-line" fill="none" />
 
         {dots.map((d, i) => (
-          <g key={i}>
+          <g key={i} className="home-uv-chart-dot-group">
+            <circle
+              cx={d.cx}
+              cy={d.cy}
+              r={18}
+              fill="transparent"
+              className="home-uv-chart-dot-hit"
+              onMouseEnter={() => placeDotTip(d)}
+              onMouseLeave={hideDotTip}
+            >
+              <title>{`${d.label} — UV index ${d.uv.toFixed(1)}`}</title>
+            </circle>
             <circle
               cx={d.cx}
               cy={d.cy}
               r={6}
               className="home-uv-chart-dot"
+              pointerEvents="none"
             />
-            <title>{`${d.label} — UV index ${d.uv.toFixed(1)}`}</title>
           </g>
         ))}
 
@@ -221,6 +263,17 @@ export function UvHourlyChart({ points, maxPoints, nowAt }: Props) {
           UV
         </text>
       </svg>
+      {dotTip && (
+        <div
+          className="home-uv-chart-tooltip"
+          style={{ left: dotTip.left, top: dotTip.top }}
+          role="tooltip"
+        >
+          <span className="home-uv-chart-tooltip-uv">{dotTip.uv.toFixed(1)}</span>
+          <span className="home-uv-chart-tooltip-suffix"> UV index</span>
+          <span className="home-uv-chart-tooltip-time">{dotTip.label}</span>
+        </div>
+      )}
     </div>
   )
 }
