@@ -83,12 +83,46 @@
   padding-top: 2rem;
 }
 
+/* Home: no frosted card—content sits on the wave */
+.shell.shell--home-bleed {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-width: none;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  padding-left: clamp(0.75rem, 4vw, 2.5rem);
+  padding-right: clamp(0.75rem, 4vw, 2.5rem);
+}
+
+.shell.shell--home-bleed .page-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
 @media (max-width: 640px) {
   .shell {
     margin-left: 0.65rem;
     margin-right: 0.65rem;
     width: auto;
     max-width: calc(100% - 1.3rem);
+  }
+
+  .shell.shell--home-bleed {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
+    width: 100%;
   }
 }
 
@@ -145,21 +179,6 @@ button.nav-tab {
 
 .page-main {
   min-height: 40vh;
-}
-
-.page {
-  animation: page-in 0.2s ease;
-}
-
-@keyframes page-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .section--page {

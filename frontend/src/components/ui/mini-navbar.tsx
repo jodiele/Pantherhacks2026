@@ -5,9 +5,9 @@ import { useAuth } from '@/context/AuthContext'
 
 const navLinksData = [
   { label: 'Home', to: '/', end: true as const },
-  { label: 'UV Planning', to: '/uv', end: false as const },
-  { label: 'Photo scan', to: '/scan', end: false as const },
-  { label: 'Coverage map', to: '/coverage', end: false as const },
+  { label: 'UV Planner', to: '/uv', end: false as const },
+  { label: 'Skin Scanner', to: '/scan', end: false as const },
+  { label: 'Coverage Map', to: '/coverage', end: false as const },
   { label: 'Learn', to: '/learn', end: false as const },
   { label: 'About', to: '/about', end: false as const },
   { label: 'Resources', to: '/resources', end: false as const },
