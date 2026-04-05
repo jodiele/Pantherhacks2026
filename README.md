@@ -11,16 +11,32 @@ Sun safety companion: **live UV index**, **burn alerts**, optional **photo scan*
 
 ## Run locally
 
-**Backend** (Python 3.10+ recommended; from repo root):
+**Backend** (Python 3.10+ recommended; from **`skin-disease-detection-inspo/`** — the folder that contains `run.py`):
+
+On macOS, `python` is often missing; use **`python3`** or the venv below.
 
 ```bash
+cd skin-disease-detection-inspo   # if you’re in the parent Skintology folder
 python3 -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+source .venv/bin/activate         # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-python run.py
+python3 run.py                    # or: .venv/bin/python run.py
 ```
 
+Shortcut (same folder): `npm run api` — uses `.venv` if present, otherwise `python3`.
+
 API: `http://127.0.0.1:5001` by default (`PORT` env overrides; 5001 avoids macOS AirPlay on 5000) — `GET /api/health`, `POST /api/predict` (multipart field `file` or `image`).
+
+**“Address already in use” / port 5001:** An older Flask process is still running (e.g. another terminal or a background run). Free the port, then start again:
+
+```bash
+lsof -nP -iTCP:5001 -sTCP:LISTEN
+kill $(lsof -t -iTCP:5001 -sTCP:LISTEN)
+```
+
+If you must use another port (e.g. `PORT=5002 python3 run.py`), change the `proxy` target in `frontend/vite.config.ts` to match.
+
+**Chat: `CERTIFICATE_VERIFY_FAILED` on macOS:** The API key is usually fine; Python failed to verify HTTPS to Mistral/OpenAI. The app uses the `certifi` CA bundle for outbound calls—run `pip install -r requirements.txt` again so `certifi` is installed, then restart Flask. Alternatively, install certs for the Python.org macOS build: open **`/Applications/Python 3.x/Install Certificates.command`**.
 
 **Frontend**:
 
