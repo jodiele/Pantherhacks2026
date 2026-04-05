@@ -43,3 +43,5 @@ Steps to run locally:
 - npm run api
 second terminal:
 - npm run dev
+
+** Couldn't deploy with Vercel due to model training size requirements**
