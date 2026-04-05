@@ -57,8 +57,7 @@ export function Hero() {
             </h1>
 
             <p className="mx-auto max-w-2xl text-center text-lg leading-relaxed tracking-tight text-white/75 md:text-xl">
-              Plan around UV peaks, check coverage, and stay aware of burn risk—without juggling a dozen
-              apps or guesswork.
+              Plan around UV peaks, check coverage, and stay aware of burn risk.
             </p>
           </div>
 
