@@ -11,7 +11,7 @@ export async function predictImage(file: File): Promise<PredictOk> {
   const trimmed = text.trim()
   if (!trimmed) {
     throw new Error(
-      `Empty response (HTTP ${res.status}). Start the Flask API on port 5000: python run.py`,
+      `Empty response (HTTP ${res.status}). Start the Flask API (python run.py; default port 5001).`,
     )
   }
   let data: PredictOk & { error?: string }
