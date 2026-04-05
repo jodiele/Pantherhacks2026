@@ -3,9 +3,11 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-# Always load repo-root .env (works even if you start Python from another cwd).
+# Load env: this folder first (same directory as run.py), then parent folder (e.g. Skintology/.env
+# when the repo lives in skin-disease-detection-inspo/). Parent only fills vars not already set.
 _ROOT = Path(__file__).resolve().parent
 load_dotenv(_ROOT / ".env")
+load_dotenv(_ROOT.parent / ".env", override=False)
 
 from app import app
 

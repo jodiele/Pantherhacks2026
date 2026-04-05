@@ -1,15 +1,23 @@
 import json
 import os
 import re
+import ssl
 import urllib.error
 import urllib.request
 from typing import Any
+
+import certifi
 
 MAX_USER_MESSAGE_LEN = 2000
 MAX_MESSAGES = 24
 
 MISTRAL_CONVERSATIONS_URL = "https://api.mistral.ai/v1/conversations"
 MISTRAL_CHAT_URL = "https://api.mistral.ai/v1/chat/completions"
+
+
+def _https_context() -> ssl.SSLContext:
+    """Use Mozilla’s CA bundle via certifi (fixes macOS Python SSL: CERTIFICATE_VERIFY_FAILED)."""
+    return ssl.create_default_context(cafile=certifi.where())
 
 
 def _normalize_secret(value: str | None) -> str:
@@ -80,7 +88,7 @@ def _http_post_json(url: str, payload: dict[str, Any], bearer: str, timeout: int
         method="POST",
     )
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
+        with urllib.request.urlopen(req, timeout=timeout, context=_https_context()) as resp:
             return json.loads(resp.read().decode())
     except urllib.error.HTTPError as e:
         try:
@@ -236,7 +244,7 @@ def _openai_reply(
     )
 
     try:
-        with urllib.request.urlopen(req, timeout=90) as resp:
+        with urllib.request.urlopen(req, timeout=90, context=_https_context()) as resp:
             raw = json.loads(resp.read().decode())
     except urllib.error.HTTPError as e:
         try:
