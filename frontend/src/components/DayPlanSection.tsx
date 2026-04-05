@@ -92,7 +92,7 @@ export function DayPlanSection() {
     >
       <div className="home-hero uv-plan-hero">
         <h2 id="uv-plan-around-title" className="home-hero-title">
-          Pla Around the Sun
+          Plan around the sun
         </h2>
         <p className="home-hero-sub">
           See when <strong>UV peaks today</strong>, view the full-day curve with a &ldquo;now&rdquo;
