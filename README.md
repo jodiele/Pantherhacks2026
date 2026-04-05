@@ -20,7 +20,7 @@ pip install -r requirements.txt
 python run.py
 ```
 
-API: `http://127.0.0.1:5000` — `GET /api/health`, `POST /api/predict` (multipart field `file` or `image`).
+API: `http://127.0.0.1:5001` by default (`PORT` env overrides; 5001 avoids macOS AirPlay on 5000) — `GET /api/health`, `POST /api/predict` (multipart field `file` or `image`).
 
 **Frontend**:
 
